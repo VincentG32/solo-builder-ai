@@ -7,8 +7,7 @@
 
 ## 📌 Contexte
 
-Je suis Scrum Master / Coach Agile / Chef de projet / Delivery Manager freelance, marchés **FR + Suisse**, FR + EN.
-Mon profil est **PM/PO, pas développeur**.
+Je suis Scrum Master / Delivery Manager freelance avec un profil produit **pas développeur**.
 
 Mon objectif : prendre en charge des projets de bout en bout — du challenge de l'idée jusqu'à la livraison et au feedback — sans recruter ni sous-traiter à chaque étape.
 
