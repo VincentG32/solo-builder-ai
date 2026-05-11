@@ -125,6 +125,6 @@ Voir [`policies/data-classification.md`](../policies/data-classification.md) et 
 ## 📚 Voir aussi
 
 - [`schema.yml`](schema.yml) — schéma annoté complet (modèle vide commenté)
-- [`example-cv-interactif.yml`](example-cv-interactif.yml) — exemple concret appliqué au CV interactif
+- [`example-pulse.yml`](example-pulse.yml) — exemple concret appliqué au projet Pulse (Next.js + Airtable + Vercel, 5 sprints livrés)
 - [`../policies/perso-profile.md`](../policies/perso-profile.md) — profil perso (modes Discovery, assouplissements)
 - [`../agents/_TEMPLATE.md`](../agents/_TEMPLATE.md) — template de spec d'agent (chaque agent référence sa section Canvas)

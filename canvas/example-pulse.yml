@@ -1,0 +1,462 @@
+# =============================================================================
+# Canvas YAML — Exemple : Pulse
+# =============================================================================
+# Cas test RÉTROACTIF : on documente ce qui aurait dû être produit par le système
+# si le projet avait été passé au pipeline complet.
+#
+# Projet réel : ~/Desktop/pulse/ déployé sur https://pulse-one-brown.vercel.app
+# Repo : https://github.com/VincentG32/pulse
+# Stack actuelle : Next.js 16 + TS + Tailwind v4 + Airtable + JWT custom + Vercel
+# Statut : V1 → V1.5 → V2-V5 livrés (5 incréments)
+# =============================================================================
+
+meta:
+  project_id: pulse
+  project_name: "Pulse"
+  description: "Outil interne de centralisation et priorisation du feedback produit. Les collègues proposent (bugs/idées/améliorations), votent, l'équipe priorise sur des données plutôt qu'à l'instinct."
+  created_at: "2026-05-04T19:22:00+02:00"
+  owner: Vincent
+  mode: perso
+  data_classification_max: sensible      # utilisateurs réels, mots de passe hashés, équipe interne
+  discovery_mode: standard               # outil interne d'équipe avec users réels mais pas commercial
+  discovery_mode_forced: false           # Coach a proposé Standard, validé
+  status: livre
+  current_sprint: null
+  last_updated_by: agent_sentinel
+  last_updated_at: "2026-05-11T03:50:00+02:00"
+  tags: [web, jamstack, b2b-interne, nextjs, airtable, feedback-management]
+
+# -----------------------------------------------------------------------------
+# decisions — Forçages et choix structurants
+# -----------------------------------------------------------------------------
+decisions:
+  - id: 1
+    timestamp: "2026-05-04T19:30:00+02:00"
+    phase: discovery
+    type: validation
+    decision_systeme: "Mode Discovery Standard recommandé (score 2/7)"
+    choix_humain: "Validé Standard"
+    justification: "Cible externe (équipe interne) + budget significatif (temps dev) — pas de marché à challenger, mais quelques angles morts internes à dérouler"
+    agent_concerne: coach
+
+  - id: 2
+    timestamp: "2026-05-04T20:00:00+02:00"
+    phase: gtm
+    type: forçage
+    decision_systeme: "Stack proposée TECH-ADVISOR : Astro + Vercel (Tier 2, plus simple)"
+    choix_humain: "Forcé Next.js 16 + Airtable + Vercel (Tier 3)"
+    justification: "Besoin de Server Components pour les pages dynamiques (liste/détail/admin) + API routes co-localisées + auth JWT custom. Astro statique pas adapté à un outil interactif avec auth."
+    agent_concerne: tech_advisor
+
+  - id: 3
+    timestamp: "2026-05-04T21:15:00+02:00"
+    phase: gtm
+    type: ajustement
+    decision_systeme: "MVP Scoper propose 'feedbacks + votes' en Must seul"
+    choix_humain: "Ajouté 'rôles user/admin' au Must"
+    justification: "Sans admin, pas de modération possible → outil devient incontrôlable dès quelques users malveillants"
+    agent_concerne: gtm
+
+  - id: 4
+    timestamp: "2026-05-06T15:00:00+02:00"
+    phase: delivery
+    type: ajustement
+    decision_systeme: "Auth via Clerk/Auth.js (plus rapide)"
+    choix_humain: "Forcé JWT custom + bcryptjs"
+    justification: "Contexte pédagogique : voir la mécanique de l'auth (hash, signature, cookie), pas masqué derrière une lib"
+    agent_concerne: dev
+
+  - id: 5
+    timestamp: "2026-05-09T12:00:00+02:00"
+    phase: feedback
+    type: pivot
+    decision_systeme: "Insight Synthesizer recommande 'persevere' sur V1"
+    choix_humain: "Pivoté vers V2 (workflow dev kanban + notifications)"
+    justification: "L'usage révèle un besoin caché : suivre l'avancement des feedbacks acceptés. Pas dans le V1 mais essentiel pour boucler avec les contributeurs."
+    agent_concerne: insight_synthesizer
+
+# -----------------------------------------------------------------------------
+# discovery — Mode Standard (Coach + CONTRARIAN + JUDGE)
+# -----------------------------------------------------------------------------
+discovery:
+  brief_initial: |
+    Outil interne pour centraliser le feedback produit (bugs, idées, améliorations)
+    et le prioriser via votes. L'équipe a besoin d'arrêter de prioriser à l'instinct
+    et de visualiser ce qui compte vraiment pour les utilisateurs internes.
+
+  coach_interview:
+    questions:
+      - q: "Qui sont les utilisateurs (en dehors de toi) qui vont soumettre/voter ?"
+        a: "Collègues d'équipe produit (PM, devs, designers, support). Interne uniquement."
+        category: cible
+      - q: "Y a-t-il des contraintes légales (RGPD, fiscal, santé) ?"
+        a: "RGPD basique (email + mot de passe), pas de données sensibles utilisateurs"
+        category: contraintes_legales
+      - q: "Y a-t-il un marché ou concurrent à challenger ?"
+        a: "Non, outil interne. Productboard / Canny existent mais pas accessibles à mon budget formation"
+        category: marche
+      - q: "L'idée est-elle claire dans ta tête ?"
+        a: "Très claire — minimaliste : feedback + vote + admin"
+        category: clarte
+      - q: "Quel est ton délai cible pour avoir quelque chose en main ?"
+        a: "Quelques semaines, c'est aussi un projet de formation"
+        category: delai
+      - q: "Tu vois un risque que des collègues votent en masse sur leurs propres idées ?"
+        a: "Oui, à anticiper — anti-double-vote au moins, modération admin pour le reste"
+        category: domaine_specifique
+      - q: "L'outil deviendra-t-il commercial à terme ou reste-t-il interne ?"
+        a: "Interne, mais pédagogique : le code servira de portfolio"
+        category: enjeu
+    diagnostic:
+      enjeu: modere
+      cible: externe                   # collègues = externes pour le système
+      contraintes_legales: false       # RGPD basique = pas un facteur lourd
+      marche_concurrentiel: false
+      budget_significatif: true        # temps dev formation
+      score_total: 2                   # +1 cible externe, +1 budget significatif
+      mode_recommande: standard
+      mode_choisi: standard
+      forced: false
+      justification_forcage: null
+    security_flags: []
+
+  # Pas d'EMBER+RAZOR en mode Standard
+  ember_razor_output: null
+
+  contrarian_output:
+    fatal_flaws:
+      - "Anti-double-vote côté UI seulement = contournable par curl → la barrière DOIT être API"
+      - "Si le token Airtable atteint le browser, fuite totale de la base"
+    hidden_assumptions:
+      - "On suppose que les votes ont du sens — mais qu'est-ce qui empêche un user de créer 3 idées identiques pour booster sa visibilité ?"
+      - "Pas d'historique : si un feedback est supprimé, on perd la trace"
+      - "Que se passe-t-il si l'admin part de l'équipe ? Comment promouvoir un autre admin ?"
+    stress_test_questions:
+      - "Cas où Airtable est down : l'app crashe ou dégrade ?"
+      - "Cas où un user oublie son mot de passe : flow de reset prévu ?"
+      - "Cas où un user spam-crée 50 feedbacks : rate limiting prévu ?"
+    security_flags: []
+
+  judge_verdict:
+    verdict: go
+    gates_passed:
+      - "Cible identifiée et accessible (équipe interne)"
+      - "Périmètre minimaliste et clair (Must = feedback + vote + admin)"
+      - "Stack accessible à un non-dev avec aide LLM (Next.js + Airtable + Vercel)"
+      - "Risques sécu identifiés et mitigeables (token serveur-side, API checks, anti-double-vote API-side)"
+    gates_failed: []
+    raison: "Projet bien scopé, risques mitigés par le CONTRARIAN. Go franc."
+    security_flags: []
+
+# -----------------------------------------------------------------------------
+# tech_advisor — Stack forcée par Vincent (Next.js 16 + Airtable + Vercel)
+# -----------------------------------------------------------------------------
+tech_advisor:
+  skipped: false
+  stack_proposees:
+    - tier: 3
+      name: "Next.js 16 + Airtable + Vercel"
+      pros:
+        - "Server Components = pas de fetch côté client pour les pages liste/détail"
+        - "API routes co-localisées = mêmes types front/back via lib/"
+        - "Vercel deploy en 1 clic, free tier généreux"
+        - "Airtable = pas de migration SQL à gérer, UI native pour debug"
+      cons:
+        - "Bundle JS plus lourd qu'un statique pur"
+        - "Tier supérieur à Astro = un peu plus de complexité"
+      estimated_cost_monthly_eur: 0.0
+      maintenance_complexity_for_non_dev: medium
+      compatible_with_classification: [public, interne, sensible]
+      composants:
+        frontend: "Next.js 16 App Router + Tailwind v4"
+        backend: "Next.js API routes (Node runtime)"
+        database: "Airtable (Pulse Base : Users · Feedbacks · Votes · Notifications · Comments)"
+        hosting: "Vercel free tier"
+        monitoring: "Sentry (optionnel) + Vercel Analytics"
+        other: ["bcryptjs", "jsonwebtoken", "zod", "sonner", "dnd-kit", "recharts", "Upstash Redis (rate limit)", "Resend (emails)"]
+    - tier: 2
+      name: "Astro + Vercel"
+      pros: ["Plus simple à maintenir", "Performance maximale"]
+      cons: ["Mal adapté à un outil interactif avec auth", "Pas de Server Components dynamiques natifs"]
+      estimated_cost_monthly_eur: 0.0
+      maintenance_complexity_for_non_dev: low
+      compatible_with_classification: [public, interne]
+      composants: {frontend: "Astro 4.x", hosting: "Vercel"}
+
+  recommandation_par_defaut_index: 1   # Astro recommandé par défaut (tier le plus bas)
+  raisonnement: "Astro suffirait pour la partie présentation/liste, mais l'auth + actions dynamiques (vote, kanban) demandent du Server Component natif. Next.js apporte cette flexibilité au prix d'un peu de complexité supplémentaire — acceptable car Vincent veut aussi en faire un portfolio pédagogique."
+
+  stack_choisie:
+    tier: 3
+    name: "Next.js 16 + Airtable + Vercel"
+    composants:
+      frontend: "Next.js 16 App Router + Tailwind v4"
+      backend: "Next.js API routes"
+      database: "Airtable (5 tables)"
+      hosting: "Vercel free tier"
+      monitoring: "Sentry + Vercel Analytics"
+      other: ["bcryptjs", "JWT custom", "zod", "Upstash Redis", "Resend", "dnd-kit", "recharts", "Playwright"]
+    forcee_par_user: true
+    justification_forcage: "Auth dynamique + portfolio pédagogique. Astro statique pas adapté."
+
+  alerts:
+    - "Token Airtable ne doit jamais atteindre le browser (vérifié dans audit)"
+    - "JWT_SECRET en variable d'env serveur uniquement"
+    - "Rate limiting recommandé sur endpoints auth/vote dès V1.5"
+
+  security_flags: []
+
+# -----------------------------------------------------------------------------
+# gtm — Phase GTM Standard
+# -----------------------------------------------------------------------------
+gtm:
+  strategie:
+    cible: "Équipe produit interne (5-20 personnes : PM, devs, designers, support)"
+    canal_principal: "Diffusion interne par le PM (moi) avec onboarding 1-to-1 sur les 3 premiers users"
+    canaux_secondaires:
+      - "Bookmark navigateur partagé"
+      - "Mention dans la routine de stand-up"
+    positionnement: "L'outil minimaliste qui remplace les fils Slack et les pages Notion fragmentées de feedback"
+    prix: gratuit
+    timing: "Live dès V1 fonctionnelle (~2 semaines de dev), itérations V1.5+V2 en continu"
+    risques_canal: "Faible adoption si pas d'onboarding bien fait sur les premiers users"
+
+  mvp_scope:
+    must:
+      - feature: "Auth email + mot de passe (bcrypt 8 chars min)"
+        description: "Inscription, login, logout. Rôle user par défaut, admin via Airtable manuel."
+        acceptance: "Un user peut créer un compte, se connecter, se déconnecter — cookie JWT httpOnly"
+      - feature: "CRUD feedbacks (Title, Description, Type)"
+        description: "3 types (Bug / Idée / Amélioration). Édition/suppression réservées au créateur."
+        acceptance: "Création OK, édition/suppression bloquées 403 si pas le créateur"
+      - feature: "Votes uniques par user"
+        description: "Un user vote 1 seule fois par feedback. VoteCount incrémenté atomiquement."
+        acceptance: "2e vote sur le même feedback → 409, VoteCount inchangé"
+      - feature: "Tri par votes décroissants sur la liste"
+        description: "Le top = ce que l'équipe attend vraiment"
+        acceptance: "Liste affichée triée par VoteCount DESC"
+      - feature: "Dashboard admin (suppression universelle)"
+        description: "Page /admin réservée au rôle admin"
+        acceptance: "User normal sur /admin → redirigé /feedbacks"
+    should:
+      - feature: "Landing page sur /"
+        description: "Hero + features + CTA login/signup — au lieu de dropper sur la liste"
+        acceptance: "Landing claire en < 5 secondes"
+      - feature: "Filtres par type (chips)"
+        description: "Filtrer la liste par Bug / Idée / Amélioration avec compteurs"
+        acceptance: "Chip cliquable, compteur visible, état actif visuel"
+      - feature: "Toasts sur mutations"
+        description: "Feedback visuel sur login, signup, vote, edit, delete"
+        acceptance: "Toast affiché en < 200ms après action"
+      - feature: "Édition inline"
+        description: "Toggle 'Modifier' sur la page détail, pas de route /edit séparée"
+        acceptance: "Édition possible sans changer d'URL"
+    later:
+      - feature: "Workflow dev kanban"
+        description: "Page /dev avec 4 colonnes (à faire, en cours, review, livré) + drag-drop"
+        acceptance: "Drag-drop fonctionnel + fallback bouton clavier/mobile"
+      - feature: "Notifications in-app"
+        description: "Bannière sur la liste pour le créateur quand son feedback avance"
+        acceptance: "Badge sur cards, dismiss persistant"
+      - feature: "Commentaires"
+        description: "Fil de discussion sur la page détail, notification automatique au créateur"
+        acceptance: "Comment posté → notif au créateur du feedback"
+      - feature: "Dashboard admin tabbed"
+        description: "?tab=overview (KPIs + charts) et ?tab=list (modération)"
+        acceptance: "Tabs accessibles + KPIs visibles"
+      - feature: "Auth durcie"
+        description: "Email verification + password reset via Resend (gracieusement dégradé sans clé)"
+        acceptance: "Sans Resend : URLs en console. Avec : email reçu."
+      - feature: "Rate limiting"
+        description: "Upstash Redis sliding window sur login/signup/vote"
+        acceptance: "Limite testée : 6e login en 1min → 429"
+      - feature: "Observabilité"
+        description: "Sentry (errors) + Vercel Analytics (Web Vitals)"
+        acceptance: "Erreur reproduite → reçue dans Sentry dashboard"
+      - feature: "Dark mode"
+        description: "Toggle manuel persistant + détection auto prefers-color-scheme"
+        acceptance: "Switch propre, persistance entre visites"
+      - feature: "Tests E2E Playwright"
+        description: "10 scenarios critiques sur signup, login, vote, anti-double-vote, permissions, kanban"
+        acceptance: "10/10 passent en CI"
+      - feature: "Audit a11y WCAG 2.1 AA"
+        description: "Audit interne + correctifs sur focus, skip-link, contraste, role=alert"
+        acceptance: "Lighthouse a11y ≥ 95"
+
+  metric_setter:
+    kpis:
+      - name: "Nombre d'utilisateurs uniques actifs"
+        description: "Utilisateurs ayant voté ou créé un feedback dans le mois"
+        target_value: 10
+        measurement_window: "Mensuel"
+      - name: "Nombre de feedbacks créés"
+        description: "Total feedbacks toutes catégories"
+        target_value: 30
+        measurement_window: "Mensuel"
+      - name: "Engagement (vote moyen par user)"
+        description: "VoteCount / users_actifs"
+        target_value: 5
+        measurement_window: "Mensuel"
+      - name: "Latence p95 API"
+        description: "95e percentile temps réponse endpoints"
+        target_value: 500
+        measurement_window: "Continu (Sentry / Vercel)"
+    pivot_criteria:
+      - "Moins de 3 users actifs sur 1 mois → revoir l'onboarding"
+      - "0 vote pendant 2 semaines → outil non adopté, revoir la diffusion"
+    persevere_criteria:
+      - "≥ 5 users actifs ET ≥ 15 feedbacks ET ≥ 3 votes moyens → continuer, ajouter Should/Later"
+
+# -----------------------------------------------------------------------------
+# delivery — 5 sprints livrés (V1 → V5)
+# -----------------------------------------------------------------------------
+delivery:
+  sprints:
+    - sprint_id: 1
+      start_at: "2026-05-04T19:22:00+02:00"
+      end_at: "2026-05-05T22:00:00+02:00"
+      goal: "V1 — MVP : auth + CRUD feedbacks + votes + admin"
+
+      pm_output:
+        stories:
+          - id: STORY-1
+            title: "Auth email + mot de passe"
+            bdd_scenario: |
+              Étant donné un visiteur sur /signup
+              Quand il saisit email + mot de passe valides
+              Alors un compte user est créé, un cookie JWT httpOnly est posé
+              Et il est redirigé sur /feedbacks
+            acceptance_criteria:
+              - "bcrypt 8 chars min"
+              - "Cookie sameSite=lax, secure en prod"
+              - "JWT signé HS256 avec JWT_SECRET serveur"
+            priority: must
+          # ... STORY-2 à STORY-N (CRUD feedbacks, votes, admin)
+        tickets: []
+
+      dev_output:
+        code_repo: "https://github.com/VincentG32/pulse"
+        branches: ["main"]
+        commits: ["..."]
+        tests_unit_coverage: 0.0      # pas de tests unit dans le contexte (E2E suffit)
+        tests_integration_status: green
+
+      audit_tech_report:
+        securite: green               # 3 couches sécu : token serveur, JWT cookie httpOnly, auth par ressource
+        qualite_code: green           # TypeScript strict + ESLint
+        accessibilite: orange         # WCAG fondations OK, audit complet en V5
+        scalabilite: green            # Vercel CDN + Airtable free tier OK pour < 1000 users
+        performance: green            # Server Components + Lighthouse OK
+        privacy: green                # Cookie httpOnly, pas de tracking
+        details_url: "https://github.com/VincentG32/pulse/actions"
+        blocking_issues: []
+
+      qa_e2e_report:
+        scenarios_count: 0            # E2E ajouté en V5
+        scenarios_passed: 0
+        screenshots_url: null
+        videos_url: null
+
+      deploy_output:
+        deployed_at: "2026-05-05T22:30:00+02:00"
+        delivery_url: "https://pulse-one-brown.vercel.app"
+        deployment_method: auto       # git push → Vercel
+        rollback_available: true
+
+      sprint_review:
+        completion_percentage: 1.0
+        blockers_encountered: []
+        decisions_logged: [4]
+
+    # V1.5, V2, V3, V4, V5 — sprints suivants (résumés)
+    - sprint_id: 2
+      goal: "V1.5 — Quick wins : landing + auth gate + filtres + toasts + édition inline"
+      end_at: "2026-05-06T22:00:00+02:00"
+      audit_tech_report: {securite: green, qualite_code: green, accessibilite: orange, scalabilite: green, performance: green, privacy: green, blocking_issues: []}
+      deploy_output: {deployed_at: "2026-05-06T22:30:00+02:00", deployment_method: auto, rollback_available: true}
+
+    - sprint_id: 3
+      goal: "V2 — Workflow dev kanban + notifications + commentaires"
+      end_at: "2026-05-07T20:00:00+02:00"
+      audit_tech_report: {securite: green, qualite_code: green, accessibilite: orange, scalabilite: green, performance: green, privacy: green, blocking_issues: []}
+
+    - sprint_id: 4
+      goal: "V3-V4 — Dashboard admin tabbed + auth durcie (email verif + password reset) + rate limiting + observabilité Sentry"
+      end_at: "2026-05-09T12:00:00+02:00"
+      audit_tech_report: {securite: green, qualite_code: green, accessibilite: orange, scalabilite: green, performance: green, privacy: green, blocking_issues: []}
+
+    - sprint_id: 5
+      goal: "V5 — Dark mode + Tests E2E Playwright + GitHub Actions CI + Audit WCAG 2.1 AA"
+      end_at: "2026-05-09T14:55:00+02:00"
+      qa_e2e_report:
+        scenarios_count: 10
+        scenarios_passed: 10
+        screenshots_url: "https://github.com/VincentG32/pulse/tree/main/tests/screenshots"
+      audit_tech_report:
+        securite: green
+        qualite_code: green
+        accessibilite: green          # ✅ passé après audit + correctifs C-1 à A-5
+        scalabilite: green
+        performance: green
+        privacy: green
+        blocking_issues: []
+        details_url: "Docs internes : audit a11y + correctifs C-1 à C-3, I-1 à I-5, A-2 à A-5"
+
+# -----------------------------------------------------------------------------
+# feedback — Boucle légère mais réelle
+# -----------------------------------------------------------------------------
+feedback:
+  synthetique: []                     # mode perso : personas pas activés
+
+  reel:
+    - sprint_id: 1
+      kpi_name: "Users actifs"
+      value_observed: 4
+      value_target: 10
+      measurement_window: "Première semaine post-livraison V1"
+      timestamp: "2026-05-08T12:00:00+02:00"
+      source: analytics
+    - sprint_id: 5
+      kpi_name: "Latence p95 API"
+      value_observed: 280
+      value_target: 500
+      measurement_window: "Continu Sentry"
+      timestamp: "2026-05-10T00:00:00+02:00"
+      source: analytics
+
+  sentinel_alerts:
+    - timestamp: "2026-05-06T11:30:00+02:00"
+      severity: warning
+      type: "rate_limit_triggered"
+      message_metier: "Un utilisateur a tenté 6 logins en 1 minute — limité automatiquement. Pas d'action requise."
+      action_taken_auto: "Upstash Redis a bloqué la 6e tentative (429)"
+      action_required_human: null
+    - timestamp: "2026-05-08T03:00:00+02:00"
+      severity: info
+      type: "ssl_renewal_auto"
+      message_metier: "Certificat SSL renouvelé automatiquement par Vercel"
+      action_taken_auto: "Renouvellement Vercel"
+      action_required_human: null
+
+  insights_synthesizer_output:
+    sprint_id: 1
+    insights_priorises:
+      - id: 1
+        summary: "Users actifs sous cible (4 vs 10) — mais V1 n'a aucun mécanisme pour suivre les feedbacks acceptés, les contributeurs ne reviennent donc pas"
+        confirmed_by: [reel]
+        priority: haute
+        suggested_action: "Ajouter workflow dev kanban + notifications pour boucler avec les contributeurs"
+      - id: 2
+        summary: "Pas d'erreur critique remontée par Sentry — la stack est stable"
+        confirmed_by: [reel]
+        priority: basse
+        suggested_action: "Continuer le rythme d'itération"
+    recommandation_globale: backlog_next   # Ajustement majeur → V2 kanban + notifications
+
+# -----------------------------------------------------------------------------
+# livrables — Aucun en mode perso (Agent Livrable off)
+# -----------------------------------------------------------------------------
+# Note : Pulse a sa propre doc dans /docs (pulse-presentation.pptx + scripts/build-presentation.mjs)
+# mais ce n'est pas produit par l'Agent Livrable du système Solo Builder — c'est de la doc native du projet.
+livrables:
+  generated: []

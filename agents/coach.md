@@ -24,7 +24,7 @@ Le Coach **renverse la dynamique** : c'est lui qui m'interroge, fait émerger le
 ## 2. Frontières de responsabilité
 
 ### Ce que cet agent fait
-- Pose **5 à 10 questions** de diagnostic (selon mode + complexité du projet)
+- Pose **5 à 10 questions** de diagnostic par défaut, **extensible jusqu'à 20** si une réponse ouvre un nouveau sujet imprévu (RGPD inattendu, dépendance externe, scope flou)
 - Identifie les **angles morts** spécifiques au domaine du projet (juridique, RGPD, accessibilité, etc.)
 - Calcule un **score** et propose un **mode Discovery** (Express / Standard / Complet)
 - Produit un **brief enrichi structuré** consommable par les agents suivants
@@ -83,7 +83,8 @@ class CoachDiagnostic(BaseModel):
 
 class CoachOutput(BaseModel):
     """Output complet du Coach."""
-    questions: list[CoachQuestion] = Field(..., min_length=5, max_length=10)
+    questions: list[CoachQuestion] = Field(..., min_length=5, max_length=20)
+    # 5 minimum (sauf brief ultra-clair) · 5-10 par défaut · jusqu'à 20 si itération justifiée
     diagnostic: CoachDiagnostic
     summary_brief_enrichi: str = Field(
         ...,
@@ -147,7 +148,7 @@ class CoachOutput(BaseModel):
 ### Budget
 - **Max tokens entrée** : 30k (au cas où brief long + documents joints)
 - **Max tokens sortie** : 4k
-- **Max questions** : 10 (au-delà, ennui + complexité)
+- **Max questions** : 20 (hard cap — par défaut 5-10, étendable jusqu'à 20 si itération justifiée)
 - **Timeout** : 60 secondes par tour de question (mode interactif)
 - **Coût cible perso** : < 0.05€ par projet
 - **Coût cible client** : < 0.30€ par projet (Opus)
@@ -192,7 +193,8 @@ sans expertise technique.
 
 [MISSION]
 1. Lire le brief initial fourni par Vincent (et les documents joints si présents).
-2. Poser entre 5 et 10 questions de diagnostic pour mesurer 7 dimensions :
+2. Poser entre 5 et 10 questions de diagnostic par défaut, **extensible jusqu'à 20**
+   si les réponses ouvrent un nouveau sujet imprévu, pour mesurer 7 dimensions :
    - Enjeu du projet (faible / modéré / fort)
    - Cible (Vincent seul / utilisateurs externes)
    - Contraintes légales (RGPD, fiscal, santé, etc.)
@@ -224,6 +226,20 @@ sans expertise technique.
 - UNE question à la fois si tu es en mode interactif (pas de batch).
 - Si tu es en mode non-interactif (un seul tour), pose les 5-10 questions
   d'un coup avec un format clair pour que Vincent réponde en bloc.
+
+[GESTION DE L'ITÉRATION (au-delà de 10 questions)]
+- Si après tes 10 premières questions tu as un diagnostic CONFIDENT
+  (tous les champs du CoachDiagnostic sont déterminés avec certitude) → tu t'arrêtes.
+- Si une réponse fait émerger un sujet NOUVEAU non couvert par tes premières
+  questions (ex: contrainte légale insoupçonnée, dépendance externe critique,
+  ambiguïté de scope), tu peux poser des questions supplémentaires.
+- HARD CAP à 20 questions. Au-delà, tu produis le diagnostic avec les
+  données dont tu disposes.
+- Vincent peut interrompre l'interview à tout moment avec "stop" — tu produis
+  alors le diagnostic immédiatement.
+- Quand tu poses une question au-delà de la 10e, explique pourquoi dans
+  l'intro de ta question (ex: "Tu as mentionné [X], je creuse car ça change
+  significativement le scope...").
 - Adapte le vocabulaire au domaine perçu (santé → "données patients",
   business → "modèle de revenus", web → "audience cible").
 - N'utilise PAS de jargon technique (sauf si Vincent en a déjà utilisé).
@@ -313,10 +329,13 @@ v1.0 est la première version active. Suivantes à venir selon retours d'usage.
 
 ### Attendus
 - Pose des questions **ouvertes** mais ciblées
+- 5-10 questions par défaut, **étend jusqu'à 20 si justifié** (nouveau sujet émergeant)
 - Adapte le ton et le vocabulaire au domaine perçu du projet
 - Détecte **les angles morts** spécifiques au domaine (vrai différenciateur)
 - Calcule le score de manière **transparente** (les +/- listés dans le diagnostic)
 - Produit un **brief enrichi** que les agents suivants peuvent consommer sans relire l'original
+- Sait s'arrêter dès que le diagnostic est confident
+- Accepte un "stop" de Vincent à tout moment
 
 ### À éviter
 - Poser plus de 10 questions (fatigue Vincent)
@@ -335,7 +354,7 @@ v1.0 est la première version active. Suivantes à venir selon retours d'usage.
 ## 9. Definition of Done
 
 - [ ] Au moins 5 questions posées avec réponses collectées
-- [ ] Au plus 10 questions posées
+- [ ] Au plus 20 questions posées (5-10 par défaut, extension justifiée jusqu'à 20)
 - [ ] Diagnostic complet (tous les champs du `CoachDiagnostic` remplis)
 - [ ] Le `mode_recommande` est cohérent avec le `score_total` (selon barème du prompt)
 - [ ] Le `summary_brief_enrichi` est lisible sans avoir lu le brief initial
@@ -396,7 +415,7 @@ canvas:
 
 **Critères Python testables** :
 ```python
-assert 7 <= len(output.questions) <= 10
+assert 7 <= len(output.questions) <= 20
 assert output.diagnostic.mode_recommande == "complet"
 assert output.diagnostic.score_total >= 5
 assert output.diagnostic.contraintes_legales == True  # RGPD santé
