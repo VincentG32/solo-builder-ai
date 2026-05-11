@@ -210,7 +210,7 @@ Pour les agents qui prennent des décisions structurantes (`CONTRARIAN`, `JUDGE`
 | [`policies/data-classification.md`](policies/data-classification.md) | ✅ Sprint 1 | 4 niveaux + routage moteur + procédure anonymisation |
 | [`policies/prompt-injection-defense.md`](policies/prompt-injection-defense.md) | ✅ Sprint 2 | Couches 2 + 4 détaillées, patterns de prompts hardenés, `security_flags` |
 | [`policies/secrets-management.md`](policies/secrets-management.md) | ✅ Sprint 2 | Stockage Keychain/sops, rotation 90j, détection (gitleaks), MCP allowlist |
-| [`policies/perso-profile.md`](policies/perso-profile.md) | 🕐 Sprint 3 | Profil perso : assouplissements vs profil client, pattern "système propose, tu décides" |
+| [`policies/perso-profile.md`](policies/perso-profile.md) | ✅ Sprint 3 | Profil perso : assouplissements vs profil client, pattern "système propose, tu décides", catalogue projets |
 | `policies/code-quality-gates.md` | 🕐 Reporté | Seuils bloquants par outil (Bandit, Semgrep, coverage, mutation). À faire avant 1er projet client. |
 | `policies/incident-response.md` | 🕐 Reporté | Templates de crise et procédures. À faire avant 1er projet client. |
 | `tools/sandboxing.md` | 🕐 Reporté | Configuration Docker isolé pour Agent Dev. À faire avant 1er code livrable. |
