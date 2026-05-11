@@ -40,7 +40,7 @@ flowchart TD
 | 3 | [CONTRARIAN](contrarian.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
 | 4 | [JUDGE](judge.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
 | 5 | [GTM](gtm.md) | GTM | 🕐 À spec | perso + client | ✅ si outil one-shot |
-| 6 | [TECH-ADVISOR](tech-advisor.md) | Transverse | 🕐 À spec | perso + client | ✅ si stack imposée |
+| 6 | [TECH-ADVISOR](tech-advisor.md) | Transverse | ✅ Spec exécutable | perso + client | ✅ si stack imposée |
 | 7 | [PM](pm.md) | Delivery | 🕐 À spec | perso + client | ❌ sauf no-code pur |
 | 8 | [Dev](dev.md) | Delivery | 🕐 À spec | perso + client | ❌ sauf no-code pur |
 | 9 | [Audit Tech](audit-tech.md) | Delivery | 🕐 À spec | perso + client | jamais |
