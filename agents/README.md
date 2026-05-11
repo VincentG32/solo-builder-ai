@@ -35,7 +35,7 @@ flowchart TD
 
 | # | Agent | Phase | Statut spec | Mode | Skippable |
 |---|---|---|---|---|---|
-| 1 | [COACH](coach.md) | Discovery | 🕐 À spec | perso + client | jamais |
+| 1 | [COACH](coach.md) | Discovery | ✅ Spec exécutable | perso + client | jamais |
 | 2 | [EMBER+RAZOR](ember-razor.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
 | 3 | [CONTRARIAN](contrarian.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
 | 4 | [JUDGE](judge.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
