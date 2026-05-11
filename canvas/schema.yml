@@ -1,0 +1,283 @@
+# =============================================================================
+# Canvas YAML — Schéma annoté (modèle vide)
+# =============================================================================
+# Ce fichier décrit la structure complète d'un Canvas de projet.
+# À utiliser comme référence pour créer un nouveau projet (canvas/projects/<id>.yml).
+#
+# Conventions :
+#   - Les champs `null` doivent être remplis par l'agent ou par moi au moment voulu
+#   - Les champs entre `<...>` sont des types attendus
+#   - Les commentaires expliquent le rôle, qui écrit, et quand
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# meta — Identité du projet (rempli au démarrage)
+# Écrit par : moi (création) + Orchestrateur (mises à jour de status uniquement)
+# -----------------------------------------------------------------------------
+meta:
+  project_id: <string>              # ex: cv-interactif, apport-affaires
+  project_name: <string>            # ex: "CV Interactif Vincent"
+  description: <string>             # 1-2 phrases résumé du projet
+  created_at: <ISO 8601 datetime>
+  owner: Vincent
+
+  # Mode immuable une fois posé (cf perso-profile.md)
+  mode: <enum: client | perso>
+
+  # Classification immuable une fois posée (cf data-classification.md)
+  data_classification_max: <enum: public | interne | sensible | critique>
+
+  # Mode Discovery (proposé par Coach, validé ou forcé par moi)
+  discovery_mode: <enum: express | standard | complet>
+  discovery_mode_forced: <bool>     # true si j'ai forcé un autre choix que la reco Coach
+
+  # État courant
+  status: <enum: discovery | tech_advisor | gtm | delivery | feedback | livre | archive>
+  current_sprint: <int | null>
+
+  # Métadonnées de mise à jour (pour traçabilité)
+  last_updated_by: <string>         # nom de l'agent ou "vincent"
+  last_updated_at: <ISO 8601 datetime>
+
+  # Tags libres (optionnel)
+  tags: []                          # ex: [web, mobile, no-code, b2c]
+
+# -----------------------------------------------------------------------------
+# decisions — Journal des décisions humaines structurantes
+# Écrit par : Orchestrateur à chaque checkpoint
+# Inclut : validations, ajustements, forçages, pivots
+# -----------------------------------------------------------------------------
+decisions: []
+  # Format d'une entrée :
+  # - id: <int>                     # incrément
+  #   timestamp: <ISO 8601>
+  #   phase: <enum: discovery | gtm | delivery | feedback>
+  #   type: <enum: validation | ajustement | forçage | pivot>
+  #   decision_systeme: <string>    # ce que le système proposait
+  #   choix_humain: <string>        # ce que j'ai retenu
+  #   justification: <string>       # ma raison (texte libre, surtout pour forçage/pivot)
+  #   agent_concerne: <string>      # nom de l'agent qui avait proposé
+
+# -----------------------------------------------------------------------------
+# discovery — Phase Discovery (modulaire selon mode)
+# -----------------------------------------------------------------------------
+discovery:
+  # Brief initial — court (3-10 lignes), rempli par moi
+  brief_initial: <string>
+
+  # Sortie du Coach (toujours présente)
+  coach_interview:
+    questions: []
+      # - q: <string>
+      #   a: <string>
+    diagnostic:
+      enjeu: <enum: faible | modere | fort>
+      cible: <enum: moi | externe>
+      contraintes_legales: <bool>
+      marche_concurrentiel: <bool>
+      budget_significatif: <bool>
+      score_total: <int>
+      mode_recommande: <enum: express | standard | complet>
+      mode_choisi: <enum: express | standard | complet>
+    security_flags: []              # codes de prompt-injection-defense.md
+
+  # Sortie EMBER+RAZOR (présent uniquement en mode Standard ou Complet)
+  ember_razor_output: null
+  # Format quand présent :
+  #   pitch: <string>
+  #   preuves_positives:
+  #     - source: <string>
+  #       url: <string>
+  #       date: <ISO 8601>
+  #       claim: <string>
+  #   preuves_negatives: [...]
+  #   concurrents_morts: [...]
+  #   security_flags: []
+
+  # Sortie CONTRARIAN (présent en mode Standard ou Complet)
+  contrarian_output: null
+  # Format quand présent :
+  #   fatal_flaws: [<string>]
+  #   hidden_assumptions: [<string>]
+  #   stress_test_questions: [<string>]
+  #   security_flags: []
+
+  # Verdict JUDGE (présent en mode Standard ou Complet)
+  judge_verdict: null
+  # Format quand présent :
+  #   verdict: <enum: go | no_go | pivot>
+  #   gates_passed: [<string>]
+  #   gates_failed: [<string>]
+  #   raison: <string>
+  #   security_flags: []
+
+# -----------------------------------------------------------------------------
+# tech_advisor — Choix de la stack technique
+# Écrit par : Agent TECH-ADVISOR (skippable si stack forcée par moi)
+# -----------------------------------------------------------------------------
+tech_advisor:
+  skipped: <bool>                   # true si stack imposée par moi dès le brief
+  stack_proposees: []
+    # - tier: <int 0-5>
+    #   name: <string>              # ex: "Airtable + Make + Yousign"
+    #   pros: [<string>]
+    #   cons: [<string>]
+    #   estimated_cost_monthly_eur: <number>
+    #   maintenance_complexity_for_non_dev: <enum: low | medium | high>
+  stack_choisie:
+    tier: <int>
+    name: <string>
+    composants:
+      frontend: <string | null>
+      backend: <string | null>
+      database: <string | null>
+      hosting: <string | null>
+      monitoring: <string | null>
+      other: []
+    forcee_par_user: <bool>
+    justification_forcage: <string | null>
+
+# -----------------------------------------------------------------------------
+# gtm — Phase Go-to-Market (3 modes : Stratégie, MVP Scoper, Metric Setter)
+# Écrit par : Agent GTM
+# -----------------------------------------------------------------------------
+gtm:
+  strategie:
+    cible: <string>
+    canal_principal: <string>
+    canaux_secondaires: []
+    positionnement: <string>
+    prix: <string>                  # ou "gratuit"
+    timing: <string>
+    risques_canal: <string>         # si concentration sur un seul canal
+
+  mvp_scope:
+    must: []                        # à livrer sprint 1
+      # - feature: <string>
+      #   description: <string>
+      #   acceptance: <string>
+    should: []                      # sprint 2-3
+    later: []                       # après validation MVP
+
+  metric_setter:
+    kpis: []
+      # - name: <string>
+      #   description: <string>
+      #   target_value: <number | string>
+      #   measurement_window: <string>  # ex: "7 jours après livraison"
+    pivot_criteria: []              # conditions qui déclencheraient un pivot
+    persevere_criteria: []          # conditions qui valident la direction
+
+# -----------------------------------------------------------------------------
+# delivery — Phase Delivery itérative (1 sprint = 1 incrément)
+# Écrit par : Agents PM / Dev / Audit Tech / QA E2E / DEPLOY
+# -----------------------------------------------------------------------------
+delivery:
+  sprints: []
+    # Format d'un sprint :
+    # - sprint_id: <int>
+    #   start_at: <ISO 8601>
+    #   end_at: <ISO 8601 | null>
+    #   goal: <string>
+    #
+    #   pm_output:
+    #     stories: []
+    #       # - id: <string>
+    #       #   title: <string>
+    #       #   bdd_scenario: <string>      # Gherkin
+    #       #   acceptance_criteria: [<string>]
+    #       #   priority: <enum: must | should | later>
+    #     tickets: []
+    #
+    #   dev_output:
+    #     code_repo: <url>
+    #     branches: [<string>]
+    #     commits: [<sha>]
+    #     tests_unit_coverage: <float>     # 0.0 à 1.0
+    #     tests_integration_status: <enum: green | orange | red>
+    #
+    #   audit_tech_report:
+    #     securite: <enum: green | orange | red>
+    #     qualite_code: <enum: green | orange | red>
+    #     accessibilite: <enum: green | orange | red>      # axe-core / Pa11y
+    #     scalabilite: <enum: green | orange | red | n/a>  # k6
+    #     performance: <enum: green | orange | red>        # Lighthouse
+    #     privacy: <enum: green | orange | red>            # cookie scanner
+    #     details_url: <string>            # rapport détaillé
+    #     blocking_issues: [<string>]
+    #
+    #   qa_e2e_report:
+    #     scenarios_count: <int>           # 3-5 max
+    #     scenarios_passed: <int>
+    #     screenshots_url: <string>
+    #     videos_url: <string>
+    #
+    #   deploy_output:
+    #     deployed_at: <ISO 8601 | null>
+    #     delivery_url: <string | null>
+    #     deployment_method: <enum: auto | manual>
+    #     rollback_available: <bool>
+    #
+    #   sprint_review:
+    #     completion_percentage: <float>
+    #     blockers_encountered: [<string>]
+    #     decisions_logged: [<int>]        # IDs des entrées decisions
+
+# -----------------------------------------------------------------------------
+# feedback — Boucle de feedback (synthétique avant livraison + réel après)
+# -----------------------------------------------------------------------------
+feedback:
+  # Couche 1 — Synthétique (4 personas FR, avant livraison)
+  synthetique: []
+    # - sprint_id: <int>
+    #   persona: <enum: dsi_pme | dirigeant_non_tech | dev_senior_sceptique | utilisateur_final_presse>
+    #   session_at: <ISO 8601>
+    #   observations: [<string>]
+    #   signaux_alerte: [<string>]
+    #   suggestions: [<string>]
+
+  # Couche 2 — Réel (KPIs + verbatims, après livraison)
+  reel: []
+    # - sprint_id: <int>
+    #   kpi_name: <string>
+    #   value_observed: <number>
+    #   value_target: <number>
+    #   measurement_window: <string>
+    #   timestamp: <ISO 8601>
+    #   source: <enum: analytics | nps | support_ticket | verbatim>
+
+  # SENTINEL — alertes post-prod (réactives + proactives)
+  sentinel_alerts: []
+    # - timestamp: <ISO 8601>
+    #   severity: <enum: info | warning | critical>
+    #   type: <string>                 # downtime, security, perf, etc.
+    #   message_metier: <string>       # langage non-tech
+    #   action_taken_auto: <string | null>
+    #   action_required_human: <string | null>
+
+  # Insight Synthesizer — synthèse cross-couches
+  insights_synthesizer_output: null
+  # Format quand présent :
+  #   sprint_id: <int>
+  #   insights_priorises: []
+  #     # - id: <int>
+  #     #   summary: <string>
+  #     #   confirmed_by: [<enum: synthetique | reel>]
+  #     #   priority: <enum: haute | moyenne | basse>
+  #     #   suggested_action: <string>
+  #   recommandation_globale: <enum: backlog_next | pivot | persevere | discovery_relance>
+
+# -----------------------------------------------------------------------------
+# livrables — Artefacts générés par Agent Livrable (event-driven)
+# Écrit par : Agent Livrable
+# -----------------------------------------------------------------------------
+livrables:
+  generated: []
+    # - type: <enum: impact_map | story_map | roadmap | sprint_review | audit_report | decision_log>
+    #   version: <semver>             # ex: 1.0, 1.1
+    #   version_exec_url: <string>    # version Exécutif (1 page, métier)
+    #   version_tech_url: <string>    # version Technique (détaillée, IT)
+    #   format: <enum: notion | html>
+    #   generated_at: <ISO 8601>
+    #   trigger_event: <string>       # ce qui a déclenché la génération
+    #   sprint_id: <int | null>
