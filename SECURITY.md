@@ -207,13 +207,14 @@ Pour les agents qui prennent des décisions structurantes (`CONTRARIAN`, `JUDGE`
 
 | Doc | Statut | Couvre |
 |---|---|---|
-| [`policies/data-classification.md`](policies/data-classification.md) | ✅ Sprint 1 | 4 niveaux + routage moteur |
-| [`policies/prompt-injection-defense.md`](policies/prompt-injection-defense.md) | 🕐 Sprint 2 | Couches 2 + 4 détaillées, patterns de prompts hardenés |
-| [`policies/code-quality-gates.md`](policies/code-quality-gates.md) | 🕐 Sprint 2 | Seuils bloquants par outil (Bandit, Semgrep, coverage, mutation) |
-| [`policies/secrets-management.md`](policies/secrets-management.md) | 🕐 Sprint 3 | Où sont stockés les secrets, comment ils transitent |
-| [`policies/incident-response.md`](policies/incident-response.md) | 🕐 Sprint 3 | Templates de crise et procédures |
-| [`tools/sandboxing.md`](tools/sandboxing.md) | 🕐 Sprint 3 | Configuration Docker isolé pour Agent Dev |
-| [`tools/pre-flight-checklist.md`](tools/pre-flight-checklist.md) | 🕐 Sprint 3 | Script de validation avant livraison client |
+| [`policies/data-classification.md`](policies/data-classification.md) | ✅ Sprint 1 | 4 niveaux + routage moteur + procédure anonymisation |
+| [`policies/prompt-injection-defense.md`](policies/prompt-injection-defense.md) | ✅ Sprint 2 | Couches 2 + 4 détaillées, patterns de prompts hardenés, `security_flags` |
+| [`policies/secrets-management.md`](policies/secrets-management.md) | ✅ Sprint 2 | Stockage Keychain/sops, rotation 90j, détection (gitleaks), MCP allowlist |
+| [`policies/perso-profile.md`](policies/perso-profile.md) | 🕐 Sprint 3 | Profil perso : assouplissements vs profil client, pattern "système propose, tu décides" |
+| `policies/code-quality-gates.md` | 🕐 Reporté | Seuils bloquants par outil (Bandit, Semgrep, coverage, mutation). À faire avant 1er projet client. |
+| `policies/incident-response.md` | 🕐 Reporté | Templates de crise et procédures. À faire avant 1er projet client. |
+| `tools/sandboxing.md` | 🕐 Reporté | Configuration Docker isolé pour Agent Dev. À faire avant 1er code livrable. |
+| `tools/pre-flight-checklist.md` | 🕐 Reporté | Script de validation avant livraison client. À faire avant 1ère livraison. |
 
 ---
 
