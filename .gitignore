@@ -5,3 +5,9 @@
 __pycache__/
 .env
 .env.local
+
+# Données projet sensibles (niveau 🟠 Sensible) — jamais publié
+contexte/
+.anonymization-map.json
+*.private.md
+*.private.yml
