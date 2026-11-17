@@ -119,7 +119,7 @@ Les 5-7 questions du Coach mesurent :
 | Aspect | Pourquoi |
 |---|---|
 | Sécu données / classification 4 niveaux | RGPD perso aussi |
-| Anonymisation systématique pour API LLM (sauf si données 🟢 Public) | Reflexe pro |
+| Anonymisation systématique avant tout envoi à un modèle Claude (sauf si données 🟢 Public) | Une donnée de santé ou les noms d'un réseau restent sensibles même s'ils m'appartiennent (décision Vincent du 18/11/2026) |
 | Validation Pydantic stricte | Garde-fou gratuit |
 | Quality gates code (sécu + qualité bloquantes) | Tu ne lis pas le code |
 | Tests adversariaux sur agents critiques | Le risque d'injection ne disparaît pas en perso |
@@ -133,7 +133,6 @@ Les 5-7 questions du Coach mesurent :
 | Aspect | Mode `client` | Mode `perso` | Justification |
 |---|---|---|---|
 | **Revues externes** | Trimestrielles + pré-livraison | Annuelle seulement | Pas de client à protéger |
-| **Anonymisation amont** | Obligatoire pour API | Optionnelle (tes données t'appartiennent) | Friction réduite |
 | **RC Pro / DPA / NDA** | Obligatoires | Optionnel | Pas de tiers exposé |
 | **Decision Log** | Exhaustif | Essentiel uniquement (forçages + pivots) | Moins de poids |
 | **Agent Livrable (6 docs clients)** | Actif par défaut | Désactivable par défaut | Personne à informer |
@@ -253,7 +252,7 @@ Un projet ne peut **pas** changer de mode en cours de route. Si je décide de tr
 1. **Nouveau projet** créé dans le Canvas avec `mode: client`
 2. **Migration sélective** des artefacts du projet perso (Discovery, choix de stack, code peuvent être réutilisés)
 3. **Re-passage de la sécu en mode client** :
-   - Anonymisation systématique réactivée
+   - Anonymisation systématique maintenue (déjà active en perso)
    - Tests adversariaux réactivés
    - Revues externes planifiées
    - Pré-flight checklist obligatoire avant livraison
