@@ -4,7 +4,7 @@
 > **Phase** : Discovery (point d'entrée du pipeline)
 > **Statut spec** : 🟢 Spec exécutable
 > **Owner** : Vincent · **Dernière MAJ** : 2026-05-11
-> **Modèle LLM par défaut** : Claude Sonnet 4.6 (perso) · Claude Opus 4.7 (client)
+> **Modèle LLM par défaut** : Claude Opus 5.5 (`claude-opus-5-5`), en perso comme en client (agent de décision)
 > **Niveau de classification max accepté** : 🟠 Sensible
 > **Activable en mode** : perso ✅ · client ✅
 > **Prompt version active** : v1.0
@@ -150,8 +150,7 @@ class CoachOutput(BaseModel):
 - **Max tokens sortie** : 4k
 - **Max questions** : 20 (hard cap — par défaut 5-10, étendable jusqu'à 20 si itération justifiée)
 - **Timeout** : 60 secondes par tour de question (mode interactif)
-- **Coût cible perso** : < 0.05€ par projet
-- **Coût cible client** : < 0.30€ par projet (Opus)
+- **Coût cible** : < 0,20 $ par projet (Opus 5.5, perso et client)
 
 ### Sources prioritaires
 - Le brief initial (priorité absolue)
@@ -513,10 +512,10 @@ flowchart LR
 
 | Item | Mode `perso` | Mode `client` |
 |---|---|---|
-| Modèle LLM | Sonnet 4.6 | Opus 4.7 |
+| Modèle LLM | Opus 5.5 | Opus 5.5 |
 | Tokens entrée estimés | ~3-5k (brief + docs) | ~3-5k |
-| Tokens sortie estimés | ~2-3k (5-10 questions + diagnostic + brief enrichi) | ~2-3k |
-| **Coût estimé par run en €** | **~0.02-0.05€** | **~0.15-0.30€** |
+| Tokens sortie estimés | ~5-6k (questions + diagnostic + brief enrichi, raisonnement interne inclus) | ~5-6k |
+| **Coût estimé par run** | **~0,14 $** | **~0,14 $** |
 | Latence moyenne | ~10-15 secondes (non-interactif) | ~15-20 secondes |
 | Fréquence par projet | 1× (sauf si re-Discovery) | 1× |
 | Prompt caching activé | ✅ (-90% input) | ✅ |

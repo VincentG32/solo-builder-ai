@@ -173,7 +173,9 @@ Obligatoire pour tout traitement Niveau Interne via API Anthropic. Recommandé m
 ### Outils
 - **Premier niveau** : regex (emails, téléphones, RIB) — déterministe, fiable
 - **Deuxième niveau** : `presidio` (Microsoft, open source) — détection NER avancée des entités
-- **Troisième niveau** : LLM Haiku local sur le brief pour repérer ce qui aurait échappé
+- **Troisième niveau** : LLM local via Ollama (Mac Mini M2) sur le brief pour repérer ce qui aurait échappé
+
+> ⚠️ **Toute la chaîne d'anonymisation est locale.** Aucun modèle Claude (Haiku, Sonnet, Opus, Fable) n'est accessible en local : ce sont des modèles API. Les utiliser à cette étape enverrait les données brutes chez Anthropic, ce qui annulerait l'anonymisation.
 
 **Mapping de réversibilité** : conservé localement dans `.anonymization-map.json` (chiffré, jamais commité, jamais transmis). Utilisé uniquement pour reconstruire les livrables finaux avec les vrais noms si le client le demande.
 

@@ -126,13 +126,13 @@ Les 5-7 questions du Coach mesurent :
 | Sandboxing code généré | Isolation infrastructure |
 | Secrets jamais en LLM | Catastrophe identique en perso |
 | Pre-commit hooks (gitleaks) | Gratuit en effort |
+| Répartition des modèles (Opus 5.5 décisions et code · Sonnet 5.5 production · Haiku 5.5 synthèse) | L'écart de prix Opus/Sonnet (×2) ne justifie plus de dégrader les décisions en perso |
 
 ### Ce qui **s'assouplit**
 
 | Aspect | Mode `client` | Mode `perso` | Justification |
 |---|---|---|---|
 | **Revues externes** | Trimestrielles + pré-livraison | Annuelle seulement | Pas de client à protéger |
-| **Modèles LLM stratégiques** | Opus sur CONTRARIAN/JUDGE/GTM | Sonnet par défaut, Opus en option | Économie 60% |
 | **Anonymisation amont** | Obligatoire pour API | Optionnelle (tes données t'appartiennent) | Friction réduite |
 | **RC Pro / DPA / NDA** | Obligatoires | Optionnel | Pas de tiers exposé |
 | **Decision Log** | Exhaustif | Essentiel uniquement (forçages + pivots) | Moins de poids |
@@ -162,7 +162,7 @@ Cumulés sur un projet Express perso : **80-90% d'économie** vs profil client s
 |---|---|---|
 | **1. Discovery modulaire** (Express par défaut) | -70% sur projets simples | Coach diagnostique, route automatiquement |
 | **2. Prompt caching Anthropic** | -90% sur system prompts répétés | Activation native API, 0 effort |
-| **3. Sonnet 4.6 par défaut** (Opus uniquement Complet) | -60% | Config profil |
+| **3. Bon modèle au bon endroit** (Haiku 5.5 synthèse/surveillance · Sonnet 5.5 production · Opus 5.5 décisions et code) | Haiku 5.5 coûte 40 fois moins qu'Opus 5.5 en entrée | Répartition fixe, identique en perso et en client |
 | **4. Ollama local** (anonymisation, reformatage, classification) | Gratuit après hardware Mac Mini M2 | Routage par classification |
 | **5. Skip agents non pertinents** | -10-20% selon projet | Agent Livrable désactivé en perso, etc. |
 

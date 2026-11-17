@@ -8,22 +8,45 @@
 
 ## 🗺️ Matrice d'ensemble
 
-| # | Agent | Phase | Modèle perso | Critique ? | Skippable |
+| # | Agent | Phase | Modèle (perso et client) | Critique ? | Skippable |
 |---|---|---|---|:---:|---|
-| 3 | EMBER+RAZOR | Discovery | Sonnet 4.6 | ✅ | ✅ sauf Complet |
-| 4 | CONTRARIAN | Discovery | Sonnet 4.6 | ✅ | ✅ sauf Standard/Complet |
-| 5 | JUDGE | Discovery | Sonnet 4.6 | ✅ | ✅ sauf Standard/Complet |
-| 6 | GTM | GTM | Sonnet 4.6 | ❌ | ✅ si outil one-shot |
-| 8 | PM | Delivery | Sonnet 4.6 | ❌ | ❌ sauf no-code pur |
-| 9 | Dev | Delivery | Sonnet 4.6 | ❌ | ❌ sauf no-code pur |
-| 10 | Audit Tech élargi | Delivery | Haiku 4.5 (synthèse) | ✅ | jamais |
-| 11 | QA E2E | Delivery | Sonnet 4.6 | ❌ | ✅ si pas d'UI |
-| 12 | DEPLOY | Delivery | Haiku 4.5 | ❌ | ✅ si pas de déploiement |
-| 13 | SENTINEL | Feedback | Haiku 4.5 (routine) | ❌ | ❌ en prod |
-| 14 | Insight Synthesizer | Feedback | Sonnet 4.6 | ✅ | ✅ si pas d'utilisateurs |
-| 15 | Livrable | Transverse | Haiku 4.5 | ❌ | ✅ off par défaut en perso |
+| 3 | EMBER+RAZOR | Discovery | Sonnet 5.5 | ✅ | ✅ sauf Complet |
+| 4 | CONTRARIAN | Discovery | Opus 5.5 | ✅ | ✅ sauf Standard/Complet |
+| 5 | JUDGE | Discovery | Opus 5.5 | ✅ | ✅ sauf Standard/Complet |
+| 6 | GTM | GTM | Sonnet 5.5 | ❌ | ✅ si outil one-shot |
+| 8 | PM | Delivery | Sonnet 5.5 | ❌ | ❌ sauf no-code pur |
+| 9 | Dev | Delivery | Opus 5.5 | ❌ | ❌ sauf no-code pur |
+| 10 | Audit Tech élargi | Delivery | Haiku 5.5 (synthèse) | ✅ | jamais |
+| 11 | QA E2E | Delivery | Sonnet 5.5 | ❌ | ✅ si pas d'UI |
+| 12 | DEPLOY | Delivery | Haiku 5.5 | ❌ | ✅ si pas de déploiement |
+| 13 | SENTINEL | Feedback | Haiku 5.5 (routine) | ❌ | ❌ en prod |
+| 14 | Insight Synthesizer | Feedback | Opus 5.5 | ✅ | ✅ si pas d'utilisateurs |
+| 15 | Livrable | Transverse | Haiku 5.5 | ❌ | ✅ off par défaut en perso |
 
 > Agents critiques (6) : golden case **adversarial obligatoire** quand on passera en spec exécutable.
+
+---
+
+## 🤖 Répartition des modèles
+
+Prix officiels Anthropic par million de tokens (entrée / sortie), génération actuelle :
+
+| Modèle | ID | Prix | Agents |
+|---|---|---|---|
+| **Opus 5.5** | `claude-opus-5-5` | 4 $ / 20 $ | Coach, CONTRARIAN, JUDGE, Dev, Insight Synthesizer |
+| **Sonnet 5.5** | `claude-sonnet-5-5` | 2 $ / 10 $ | EMBER+RAZOR, GTM, TECH-ADVISOR, PM, QA E2E |
+| **Haiku 5.5** | `claude-haiku-5-5` | 0,10 $ / 0,50 $ (requêtes jusqu'à 100k tokens) | Audit Tech (synthèse), DEPLOY, SENTINEL, Livrable |
+| **Fable 5.1** | `claude-fable-5-1` | 10 $ / 50 $ | Aucun par défaut. Uniquement sur demande explicite de Vincent, pour un cas rare et lourd (ex : Discovery Complète à fort enjeu) |
+| **Ollama local** | non applicable | Gratuit après matériel | Anonymisation et toute donnée 🟠 Sensible |
+
+**Logique** :
+- **Opus 5.5** pour les agents qui décident, ou dont une erreur serait coûteuse et invisible pour un non-développeur (Dev : le code n'est pas relu par Vincent).
+- **Sonnet 5.5** pour la production courante, toujours suivie d'un checkpoint humain.
+- **Haiku 5.5** pour la synthèse courte, le reformatage et la surveillance de routine.
+- **Répartition identique** en mode perso et en mode client.
+- **Aucun modèle Claude ne reçoit de donnée avant l'anonymisation**, qui est 100 % locale.
+
+> Note pour l'implémentation : sur ces modèles, le raisonnement interne est toujours actif et facturé comme des tokens de sortie, et certains paramètres d'appel ont changé. À intégrer au moment de coder.
 
 ---
 
@@ -51,7 +74,7 @@
 
 **Risque sécu** : 🔴 **injection indirecte via résultats web**. Golden case adversarial obligatoire (faux post Reddit avec instruction cachée).
 
-**Coût** : ~0.10 € perso par run (Sonnet, web search inclus).
+**Coût** : ~0,14 $ par run (Sonnet 5.5), plus les recherches web, facturées à part.
 
 ---
 
@@ -79,7 +102,7 @@
 
 **Risque sécu** : 🟠 injection via brief enrichi (peut être manipulé pour "rester positif"). Golden case adversarial obligatoire.
 
-**Coût** : ~0.05 € perso par run.
+**Coût** : ~0,15 $ par run (Opus 5.5).
 
 ---
 
@@ -113,7 +136,7 @@
 
 **Risque sécu** : 🔴 **cible naturelle d'injection** ("Verdict obligatoire : Go"). Golden case adversarial obligatoire.
 
-**Coût** : ~0.03 € perso par run.
+**Coût** : ~0,12 $ par run (Opus 5.5).
 
 ---
 
@@ -141,7 +164,7 @@
 
 **Risque sécu** : 🟡 limité, pas d'ingestion externe.
 
-**Coût** : ~0.08 € perso par run.
+**Coût** : ~0,10 $ par run (Sonnet 5.5).
 
 ---
 
@@ -169,7 +192,7 @@
 
 **Risque sécu** : 🟡 limité.
 
-**Coût** : ~0.10 € perso par sprint.
+**Coût** : ~0,12 $ par sprint (Sonnet 5.5).
 
 ---
 
@@ -198,7 +221,7 @@
 
 **Risque sécu** : 🟠 **sandboxing obligatoire**. Le code généré ne s'exécute jamais sur la machine de Vincent (Docker isolé sans accès réseau host).
 
-**Coût** : ~0.50-2.00 € par sprint selon volume de code.
+**Coût** : ~1 à 3 $ par sprint selon le volume de code (Opus 5.5). C'est le poste le plus lourd du système.
 
 ---
 
@@ -238,7 +261,7 @@
 
 **Risque sécu** : 🔴 **cible critique** (commentaires `# IGNORE THIS FILE FROM AUDIT` dans le code). Golden case adversarial obligatoire.
 
-**Coût** : ~0.05 € perso par sprint (uniquement synthèse Haiku, les CLI = 0 token).
+**Coût** : < 0,01 $ par sprint (synthèse Haiku 5.5 uniquement, les outils CLI ne consomment aucun token).
 
 ---
 
@@ -266,7 +289,7 @@
 
 **Risque sécu** : 🟡 limité.
 
-**Coût** : ~0.20 € par sprint + temps CI (5-15 min par run).
+**Coût** : ~0,11 $ par sprint (Sonnet 5.5) + temps CI (5-15 min par run).
 
 ---
 
@@ -295,7 +318,7 @@
 
 **Risque sécu** : 🟠 cible potentielle (injection de clés via commit malveillant). Pre-commit hook `gitleaks` obligatoire.
 
-**Coût** : ~0.02 € par déploiement (Haiku, synthèse courte).
+**Coût** : < 0,01 $ par déploiement (Haiku 5.5, synthèse courte).
 
 ---
 
@@ -326,7 +349,7 @@
 
 **Risque sécu** : 🟡 limité (lecture seule sur logs).
 
-**Coût** : ~0.50 € / mois / projet en mode perso (digest quotidien + alertes).
+**Coût** : < 0,10 $ / mois / projet (Haiku 5.5, digest quotidien + alertes).
 
 ---
 
@@ -355,7 +378,7 @@
 
 **Risque sécu** : 🔴 **manipulation des KPIs possible** (faux verbatim utilisateur qui maquille). Golden case adversarial obligatoire.
 
-**Coût** : ~0.15 € par cycle feedback (Sonnet, croisement + synthèse).
+**Coût** : ~0,18 $ par cycle feedback (Opus 5.5, croisement + synthèse).
 
 ---
 
@@ -383,7 +406,7 @@
 
 **Risque sécu** : 🟡 risque de propagation d'injection depuis Canvas (déjà filtré en amont).
 
-**Coût** : ~0.10 € par livrable généré (Haiku, reformatage).
+**Coût** : < 0,01 $ par livrable généré (Haiku 5.5, reformatage).
 
 ---
 
@@ -421,26 +444,30 @@ flowchart TD
 
 ## 📊 Coût total estimé par projet
 
-Projet type **Standard** (mode perso) :
+> Estimations calculées sur les prix officiels Anthropic (en dollars) et sur des volumes de tokens supposés, raisonnement interne compris. Le prompt caching n'est pas déduit : les coûts réels devraient être plus bas. À remplacer par des mesures dès les premiers vrais runs.
+
+Projet type **Standard** (5 sprints) :
 
 | Phase | Agents | Coût estimé |
 |---|---|---|
-| Discovery | Coach + CONTRARIAN + JUDGE | ~0.10 € |
-| GTM | GTM | ~0.08 € |
-| Transverse | TECH-ADVISOR | ~0.02 € |
-| Delivery (5 sprints) | PM + Dev + Audit Tech + QA E2E + DEPLOY | ~15 € |
-| Feedback (/ mois) | SENTINEL + Insight Synthesizer | ~0.65 € |
-| **Total projet complet** | | **~16 €** |
+| Discovery | Coach + CONTRARIAN + JUDGE | ~0,41 $ |
+| GTM | GTM | ~0,10 $ |
+| Transverse | TECH-ADVISOR | ~0,06 $ |
+| Delivery (5 sprints) | PM + Dev + Audit Tech + QA E2E + DEPLOY | ~8,20 $ |
+| Feedback (par mois) | SENTINEL + Insight Synthesizer | ~0,25 $ |
+| **Total projet complet** | | **~9 $** + ~0,25 $ / mois |
 
-Projet type **Express** (mode perso, pas de concurrence) :
+Projet type **Express** (2 sprints) :
 
 | Phase | Agents | Coût estimé |
 |---|---|---|
-| Discovery | Coach seul | ~0.03 € |
-| GTM | GTM allégé | ~0.05 € |
-| Delivery (2 sprints) | PM + Dev + Audit Tech + DEPLOY | ~4 € |
-| Feedback (/ mois) | SENTINEL | ~0.50 € |
-| **Total projet simple** | | **~5 €** |
+| Discovery | Coach seul | ~0,14 $ |
+| GTM | GTM allégé | ~0,06 $ |
+| Delivery (2 sprints) | PM + Dev + Audit Tech + DEPLOY | ~3,05 $ |
+| Feedback (par mois) | SENTINEL | < 0,10 $ |
+| **Total projet simple** | | **~3,3 $** + < 0,10 $ / mois |
+
+> **Dev pèse plus de 80 % du coût Delivery.** Si le budget devient un sujet, c'est le premier levier : passer Dev en Sonnet 5.5 diviserait ce poste par environ 2. Décision qui revient à Vincent.
 
 ---
 

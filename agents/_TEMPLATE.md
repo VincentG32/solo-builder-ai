@@ -9,7 +9,7 @@ Remplir chaque section. Sections marquées 🟢 sont obligatoires en mode "spec 
 > **Phase** : Discovery / GTM / Delivery / Feedback / Transverse
 > **Statut spec** : 🟡 Cadrage léger · 🟢 Spec exécutable
 > **Owner** : Vincent · **Dernière MAJ** : YYYY-MM-DD
-> **Modèle LLM par défaut** : Claude Sonnet 4.6 (perso) · Claude Opus 4.7 (client si critique)
+> **Modèle LLM par défaut** : selon la répartition du système (Opus 5.5 pour décisions et code · Sonnet 5.5 pour production courante · Haiku 5.5 pour synthèse courte et surveillance), cf [`light-specs.md`](light-specs.md#-répartition-des-modèles)
 > **Niveau de classification max accepté** : 🟢 Public / 🟡 Interne / 🟠 Sensible / 🔴 Critique
 > **Activable en mode** : perso ✅ · client ✅ (ou ❌ si limitation)
 > **Prompt version active** : v1.0
@@ -356,10 +356,10 @@ flowchart LR
 
 | Item | Mode `perso` | Mode `client` |
 |---|---|---|
-| Modèle LLM | Sonnet 4.6 | Opus 4.7 (si critique) |
+| Modèle LLM | Opus 5.5 / Sonnet 5.5 / Haiku 5.5 | idem |
 | Tokens entrée estimés | ~X | ~X |
-| Tokens sortie estimés | ~Y | ~Y |
-| **Coût estimé par run en €** | ~0.XX | ~Y.YY |
+| Tokens sortie estimés (raisonnement interne inclus) | ~Y | ~Y |
+| **Coût estimé par run (en $, prix officiels)** | ~0,XX $ | ~0,XX $ |
 | Latence moyenne | ~Z secondes | ~Z secondes |
 | Fréquence par projet | 1× / N× / event-driven | idem |
 | Prompt caching activé | ✅ (-90% input) | ✅ |

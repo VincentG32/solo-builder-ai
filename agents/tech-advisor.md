@@ -4,7 +4,7 @@
 > **Phase** : Transverse — s'intercale entre GTM et Delivery (skippable si stack imposée)
 > **Statut spec** : 🟢 Spec exécutable
 > **Owner** : Vincent · **Dernière MAJ** : 2026-05-11
-> **Modèle LLM par défaut** : Claude Sonnet 4.6 (perso) · Claude Sonnet 4.6 (client — pas besoin d'Opus)
+> **Modèle LLM par défaut** : Claude Sonnet 5.5 (`claude-sonnet-5-5`), en perso comme en client (proposition validée par Vincent derrière, pas de décision irréversible)
 > **Niveau de classification max accepté** : 🟠 Sensible
 > **Activable en mode** : perso ✅ · client ✅
 > **Prompt version active** : v1.0
@@ -184,7 +184,7 @@ class TechAdvisorOutput(BaseModel):
 - **Max tokens entrée** : 15k
 - **Max tokens sortie** : 3k
 - **Timeout** : 30 secondes
-- **Coût cible** : < 0.02€ par run (perso ou client)
+- **Coût cible** : < 0,10 $ par run (perso ou client)
 
 ### Sources prioritaires
 - Catalogue de stacks "Vincent-friendly" embarqué dans le prompt système
@@ -514,10 +514,10 @@ flowchart LR
 
 | Item | Mode `perso` | Mode `client` |
 |---|---|---|
-| Modèle LLM | Sonnet 4.6 | Sonnet 4.6 (pas besoin Opus) |
+| Modèle LLM | Sonnet 5.5 | Sonnet 5.5 |
 | Tokens entrée estimés | ~5-8k (Canvas sections + catalogue dans prompt) | idem |
-| Tokens sortie estimés | ~2-3k (2-3 stacks détaillées) | idem |
-| **Coût estimé par run en €** | **~0.02€** | **~0.02€** |
+| Tokens sortie estimés | ~4k (2-3 stacks détaillées, raisonnement interne inclus) | idem |
+| **Coût estimé par run** | **~0,06 $** | **~0,06 $** |
 | Latence moyenne | ~5-10 secondes | idem |
 | Fréquence par projet | 1× (sauf re-architecture) | 1× |
 | Prompt caching activé | ✅ (-90% sur catalogue + system prompt répété) | ✅ |
