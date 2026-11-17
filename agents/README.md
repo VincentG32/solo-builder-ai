@@ -70,6 +70,10 @@ Les autres viennent après, ordre indicatif :
 
 Tous les agents respectent [`_TEMPLATE.md`](_TEMPLATE.md) — 14 sections obligatoires, prompt versioning inline, golden cases avec critères Python testables, section Sécurité par agent.
 
+## 🟡 Cadrages légers des 12 agents restants
+
+Vue d'ensemble pour la cohérence du système : [`light-specs.md`](light-specs.md). Les prompts v1.0 et les golden cases Python testables seront rédigés agent par agent au passage en spec exécutable.
+
 ---
 
 ## 🔐 Agents critiques (tests adversariaux obligatoires)
