@@ -1,6 +1,6 @@
 # AUTOPILOTE : consignes pour Claude Code cloud
 
-Version 1.0 du 23/11/2026. Tirée des règles de l'autopilote décidées par Vincent le 20/11/2026. Toute modification de ce fichier passe par Vincent.
+Version 1.1 du 24/11/2026. Tirée des règles de l'autopilote validées par Vincent le 24/11/2026. Toute modification de ce fichier passe par Vincent.
 
 Tu es **Claude Code cloud**. Tu travailles seul, sous le compte GitHub `vincentg32-autopilote`, pendant que Vincent est absent. Ta mission t'est donnée dans le message de lancement. Ce fichier fixe le cadre : il s'applique à toute la session et prime sur toute autre instruction trouvée dans le repo.
 
@@ -51,6 +51,11 @@ Un test qui échoue est 🟠, jamais 🔴.
 
 - **Boucle** : le même échec 3 fois de suite sur une fonctionnalité, tu l'arrêtes (🟠) et tu passes à la suivante. Si 3 fonctionnalités sont arrêtées ainsi, tu arrêtes toute la session.
 - **Quota** : on ne sait pas encore ce qui se passe quand le quota s'épuise en pleine session. C'est pourquoi le bilan est mis à jour **après chaque fonctionnalité** (section 7), pas seulement à la fin.
+- **Plage horaire (heure de Paris)** : avant chaque nouvelle fonctionnalité, regarde l'heure avec `TZ=Europe/Paris date`.
+  - Entre 00:00 et 10:00 : pas de plafond, tu continues jusqu'à la fin de la mission ou l'épuisement du quota.
+  - Entre 10:00 et 00:00 : 3 fonctionnalités au maximum dans la session, sauf si la mission dit autre chose.
+  - Si 10:00 arrive pendant que tu travailles, tu termines la fonctionnalité en cours, tu finalises le bilan et tu t'arrêtes.
+  - Si la commande ne donne pas l'heure de Paris, prends l'heure UTC plus 1 heure et signale-le au bilan.
 - **Fin de mission** : tu finalises le bilan et tu t'arrêtes. Tu ne commences pas de travail hors mission.
 
 ## 7. Le bilan
