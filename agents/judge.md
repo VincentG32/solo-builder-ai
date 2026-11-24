@@ -558,8 +558,8 @@ Pas de recherche web, donc pas de coût annexe. Budget maximal et timeout : sect
 
 ## 14. Notes & questions ouvertes
 
-- [ ] **Format de `judge_verdict` dans le schéma Canvas** : `canvas/schema.yml` décrit `gates_passed` et `gates_failed` comme `[<string>]` ; la spec les structure et ajoute `angle_a_revoir`, `fatal_flaws_non_resolus`, `fatal_flaws_forces`. Mettre à jour le schéma pour que l'Orchestrateur, GTM et le checkpoint partagent le contrat.
-- [ ] **Écart de périmètre EMBER+RAZOR** : `canvas/schema.yml` le dit présent en Standard ou Complet, light-specs.md (suivi ici) au mode Complet. Corriger le schéma.
+- [x] **Format de `judge_verdict` dans le schéma Canvas** : `canvas/schema.yml` décrit `gates_passed` et `gates_failed` comme `[<string>]` ; la spec les structure et ajoute `angle_a_revoir`, `fatal_flaws_non_resolus`, `fatal_flaws_forces`. Mettre à jour le schéma pour que l'Orchestrateur, GTM et le checkpoint partagent le contrat. *Mis à jour le 2026-11-24 : reporté dans `canvas/schema.yml`.*
+- [x] **Écart de périmètre EMBER+RAZOR** : `canvas/schema.yml` le dit présent en Standard ou Complet, light-specs.md (suivi ici) au mode Complet. Corriger le schéma. *Mis à jour le 2026-11-24 : reporté dans `canvas/schema.yml`.*
 - [ ] **`no_go` ambigu** : sans valeur `insuffisant`, un `no_go` mêle « idée refusée » et « éléments manquants ou défauts non traités ». Si les relances inutiles se multiplient, ajouter un champ (ex : `cause_blocage`) ou une valeur d'enum, au prix d'un changement de schéma Canvas.
 - [ ] **Résolution calculée par code** : « résolu » (section 11) est déterministe ; l'Orchestrateur pourrait la précalculer et retirer la surface d'injection de `canvas.decisions`. À trancher dans la spec de l'Orchestrateur.
 - [ ] **Gates 2 et 3 avant GTM et TECH-ADVISOR** : JUDGE juge le périmètre et l'accessibilité de la stack sur le seul brief, alors que le scope (GTM) et la stack (TECH-ADVISOR) viennent après. Un brief court fait échouer G2 et G3 par absence de preuve. Prévoir que le COACH pose systématiquement les questions utiles ? À décider avec Vincent.

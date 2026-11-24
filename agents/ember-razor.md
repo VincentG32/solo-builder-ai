@@ -505,7 +505,7 @@ flowchart LR
 ```
 
 - **Amont** : COACH (routage score 5+) · web search et MCP Data.gouv (hostiles)
-- **Aval** : CONTRARIAN (lit `canvas.discovery.ember_razor_output`) · JUDGE (lit tout `canvas.discovery`)
+- **Aval** : CONTRARIAN (lit `canvas.discovery.ember_razor_output`) · JUDGE (lit tout `canvas.discovery`) · GTM (lit `preuves_negatives`, `concurrents_morts`, `lacunes`)
 - **Skippable en mode** : Express ✅ / Standard ✅ / Complet ❌
 - **Checkpoint humain en aval ?** : ✅ obligatoire si `security_flags` non vide ; sinon ❌ optionnel (CONTRARIAN relit les preuves, le checkpoint principal reste après JUDGE)
 
@@ -548,8 +548,8 @@ flowchart LR
 
 ## 14. Notes & questions ouvertes
 
-- [ ] **Écart schéma Canvas** : `canvas/schema.yml` ne détaille pas `preuves_negatives` ni `concurrents_morts` et n'a pas `lacunes`, `requetes_web_utilisees`, `date_type`. Ajoutés ici, à reporter dans le schéma.
-- [ ] **Écart de mode** : le schéma Canvas dit `ember_razor_output` présent en Standard ou Complet, light-specs et le routage COACH (score 5+) disent Complet uniquement. Cette spec suit light-specs ; à corriger dans le schéma ou à trancher.
+- [x] **Écart schéma Canvas** : `canvas/schema.yml` ne détaille pas `preuves_negatives` ni `concurrents_morts` et n'a pas `lacunes`, `requetes_web_utilisees`, `date_type`. Ajoutés ici, à reporter dans le schéma. *Mis à jour le 2026-11-24 : reporté dans `canvas/schema.yml`.*
+- [x] **Écart de mode** : le schéma Canvas dit `ember_razor_output` présent en Standard ou Complet, light-specs et le routage COACH (score 5+) disent Complet uniquement. Cette spec suit light-specs ; à corriger dans le schéma ou à trancher. *Mis à jour le 2026-11-24 : reporté dans `canvas/schema.yml`.*
 - [ ] **Timeout et sortie** : le template dit 90 s et 8k tokens, light-specs 30 s de recherche. Gardé 30 s plus 60 s de rédaction et 10k tokens de sortie (raisonnement facturé). Réversible, à recalibrer sur les runs réels.
 - [ ] **Enum `source`** fermé : doit évoluer avec `URL_ALLOWLIST`.
 - [ ] **Source piégée** : écartée si elle adresse une instruction à l'agent ; alternative : la garder si son contenu est vérifiable ailleurs.

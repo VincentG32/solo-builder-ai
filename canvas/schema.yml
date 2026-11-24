@@ -32,7 +32,7 @@ meta:
   discovery_mode_forced: <bool>     # true si j'ai forcé un autre choix que la reco Coach
 
   # État courant
-  status: <enum: discovery | tech_advisor | gtm | delivery | feedback | livre | archive>
+  status: <enum: discovery | gtm | tech_advisor | delivery | feedback | livre | archive>  # ordre du pipeline : GTM avant TECH-ADVISOR
   current_sprint: <int | null>
 
   # Métadonnées de mise à jour (pour traçabilité)
@@ -57,6 +57,9 @@ decisions: []
   #   choix_humain: <string>        # ce que j'ai retenu
   #   justification: <string>       # ma raison (texte libre, surtout pour forçage/pivot)
   #   agent_concerne: <string>      # nom de l'agent qui avait proposé
+  # Convention (cf agents/contrarian.md, section 11) : un fatal_flaw est résolu par une entrée
+  # validation, ajustement ou pivot, phase discovery, agent_concerne CONTRARIAN, dont
+  # decision_systeme commence par son id (ex : "FF-ECO-01 : ...").
 
 # -----------------------------------------------------------------------------
 # discovery — Phase Discovery (modulaire selon mode)
@@ -70,6 +73,7 @@ discovery:
     questions: []
       # - q: <string>
       #   a: <string>
+      #   category: <enum: enjeu | cible | contraintes_legales | marche | clarte | budget | delai | domaine_specifique>
     diagnostic:
       enjeu: <enum: faible | modere | fort>
       cible: <enum: moi | externe>
@@ -79,36 +83,62 @@ discovery:
       score_total: <int>
       mode_recommande: <enum: express | standard | complet>
       mode_choisi: <enum: express | standard | complet>
+      forced: <bool>
+      justification_forcage: <string | null>
+    summary_brief_enrichi: <string>           # lu par EMBER+RAZOR, CONTRARIAN, JUDGE, GTM, TECH-ADVISOR
+    angles_morts_detectes: [<string>]
+    questions_recommandees_pour_la_suite: [<string>]
     security_flags: []              # codes de prompt-injection-defense.md
 
-  # Sortie EMBER+RAZOR (présent uniquement en mode Standard ou Complet)
+  # Sortie EMBER+RAZOR (présent uniquement en mode Complet), cf agents/ember-razor.md
   ember_razor_output: null
   # Format quand présent :
   #   pitch: <string>
   #   preuves_positives:
-  #     - source: <string>
-  #       url: <string>
-  #       date: <ISO 8601>
+  #     - source: <enum: reddit | hacker_news | g2 | product_hunt | crunchbase | failory | linkedin_public | data_gouv | insee>
+  #       url: <string>               # citation, https, domaine de l'allowlist
+  #       date: <ISO 8601 date>
+  #       date_type: <enum: publication | consultation>
   #       claim: <string>
-  #   preuves_negatives: [...]
-  #   concurrents_morts: [...]
+  #   preuves_negatives: [...]        # même format que preuves_positives
+  #   concurrents_morts:
+  #     - nom: <string>
+  #       cause_echec: <string>
+  #       source: <preuve>            # même format que preuves_positives
+  #   lacunes: [<string>]
+  #   requetes_web_utilisees: <int 0-20>
   #   security_flags: []
 
-  # Sortie CONTRARIAN (présent en mode Standard ou Complet)
+  # Sortie CONTRARIAN (présent en mode Standard ou Complet), cf agents/contrarian.md
   contrarian_output: null
   # Format quand présent :
-  #   fatal_flaws: [<string>]
-  #   hidden_assumptions: [<string>]
-  #   stress_test_questions: [<string>]
+  #   fatal_flaws:                    # 3 au moins, sinon absence_fatal_flaws_explication
+  #     - id: <string>                # FF-<JUR|FIS|OPE|DEP|ECO|AUT>-<nn>
+  #       categorie: <enum: juridique | fiscal | operationnel | dependance_externe | modele_economique | autre>
+  #       gravite: <enum: bloquante | majeure>
+  #       titre: <string>
+  #       description: <string>
+  #       si_ca_arrive: <string>
+  #       references: [{type: <enum: brief | angle_mort_coach | question_coach | preuve_ember_razor>, ref: <string>}]
+  #       question_de_resolution: <string>
+  #       a_verifier: <string | null>  # obligatoire pour juridique et fiscal
+  #   absence_fatal_flaws_explication: <string | null>
+  #   hidden_assumptions: [{id: HA-<nn>, categorie, hypothese, risque_si_fausse, references}]
+  #   stress_test_questions: [{id: ST-<nn>, question, cible_id: <FF-... | HA-... | null>}]
+  #   limites_analyse: [<string>]
   #   security_flags: []
 
-  # Verdict JUDGE (présent en mode Standard ou Complet)
+  # Verdict JUDGE (présent en mode Standard ou Complet), cf agents/judge.md
   judge_verdict: null
   # Format quand présent :
-  #   verdict: <enum: go | no_go | pivot>
-  #   gates_passed: [<string>]
-  #   gates_failed: [<string>]
+  #   verdict: <enum: go | no_go | pivot>   # no_go aussi si un élément manque (preuve_absente)
+  #   gates_passed: [<gate>]          # les 5 gates G1_CIBLE..G5_FATAL_FLAWS, chacune une seule fois
+  #   gates_failed: [<gate>]
+  #     # gate : {id, justification, elements_canvas: [{chemin, extrait}], preuve_absente: <bool>}
   #   raison: <string>
+  #   angle_a_revoir: <string | null>        # pivot uniquement
+  #   fatal_flaws_non_resolus: [<FF-id>]
+  #   fatal_flaws_forces: [<FF-id>]          # sous-ensemble des non résolus (forçage tracé)
   #   security_flags: []
 
 # -----------------------------------------------------------------------------
@@ -117,6 +147,8 @@ discovery:
 # -----------------------------------------------------------------------------
 tech_advisor:
   skipped: <bool>                   # true si stack imposée par moi dès le brief
+  # Autres champs de la sortie (cf agents/tech-advisor.md) : skip_reason, recommandation_par_defaut_index,
+  # raisonnement, alerts, security_flags ; une stack proposée porte aussi compatible_with_classification et composants
   stack_proposees: []
     # - tier: <int 0-5>
     #   name: <string>              # ex: "Airtable + Make + Yousign"
@@ -142,22 +174,23 @@ tech_advisor:
 # Écrit par : Agent GTM
 # -----------------------------------------------------------------------------
 gtm:
+  # Champs de contrôle de GTM (skipped, skip_reason, format_sortie, security_flags) : hors Canvas, cf agents/gtm.md
   strategie:
-    cible: <string>
+    cible: <string>                 # contient "Volume estimé : <nombre> ..." (lu par TECH-ADVISOR)
     canal_principal: <string>
     canaux_secondaires: []
     positionnement: <string>
     prix: <string>                  # ou "gratuit"
     timing: <string>
-    risques_canal: <string>         # si concentration sur un seul canal
+    risques_canal: <string>         # toujours rempli, même si le risque est faible
 
   mvp_scope:
     must: []                        # à livrer sprint 1
       # - feature: <string>
       #   description: <string>
       #   acceptance: <string>
-    should: []                      # sprint 2-3
-    later: []                       # après validation MVP
+    should: []                      # sprint 2-3, même format que must
+    later: []                       # après validation MVP, même format que must
 
   metric_setter:
     kpis: []
@@ -165,8 +198,8 @@ gtm:
       #   description: <string>
       #   target_value: <number | string>
       #   measurement_window: <string>  # ex: "7 jours après livraison"
-    pivot_criteria: []              # conditions qui déclencheraient un pivot
-    persevere_criteria: []          # conditions qui valident la direction
+    pivot_criteria: []              # [<string>] : KPI + comparateur + seuil chiffré, gelés au checkpoint GTM
+    persevere_criteria: []          # [<string>] : même format
 
 # -----------------------------------------------------------------------------
 # delivery — Phase Delivery itérative (1 sprint = 1 incrément)
@@ -174,24 +207,35 @@ gtm:
 # -----------------------------------------------------------------------------
 delivery:
   sprints: []
+    # sprints[N] désigne le sprint dont sprint_id = N (pas la position dans la liste).
+    # Les champs de contrôle des agents (status, verdict, alerts, security_flags, etc.) restent dans l'état
+    # de l'Orchestrateur, hors Canvas : voir la section 4 de chaque spec.
     # Format d'un sprint :
     # - sprint_id: <int>
-    #   start_at: <ISO 8601>
-    #   end_at: <ISO 8601 | null>
+    #   start_at: <ISO 8601>             # écrit par l'Orchestrateur à l'ouverture du sprint
+    #   end_at: <ISO 8601 | null>        # écrit par l'Orchestrateur à la clôture du sprint
     #   goal: <string>
     #
     #   pm_output:
     #     stories: []
-    #       # - id: <string>
+    #       # - id: <string>                # S<sprint>-<nn>, stable
     #       #   title: <string>
+    #       #   gtm_feature: <string>         # nom exact de la feature de gtm.mvp_scope
+    #       #   origin: <enum: nouveau | reporte>
     #       #   bdd_scenario: <string>      # Gherkin
-    #       #   acceptance_criteria: [<string>]
+    #       #   acceptance_criteria: [<string>]  # exactement 1 élément
     #       #   priority: <enum: must | should | later>
-    #     tickets: []
+    #       #   qa_critical_path: <bool>      # 5 au plus par sprint, lus par QA E2E
+    #     tickets: []                       # exactement 1 ticket par story
+    #       # - id: <string>                # T-<id story>
+    #       #   story_id: <string>
+    #       #   title: <string>
+    #       #   order: <int 1-7>
+    #       #   depends_on: [<ticket id>]
     #
     #   dev_output:
     #     code_repo: <url>
-    #     branches: [<string>]
+    #     branches: [<string>]             # dev/sprint-<n> ou dev/sprint-<n>-fix-<k>
     #     commits: [<sha>]
     #     tests_unit_coverage: <float>     # 0.0 à 1.0
     #     tests_integration_status: <enum: green | orange | red>
@@ -199,15 +243,19 @@ delivery:
     #   audit_tech_report:
     #     securite: <enum: green | orange | red>
     #     qualite_code: <enum: green | orange | red>
-    #     accessibilite: <enum: green | orange | red>      # axe-core / Pa11y
+    #     accessibilite: <enum: green | orange | red | n/a>  # axe-core / Pa11y (n/a sans interface)
     #     scalabilite: <enum: green | orange | red | n/a>  # k6
-    #     performance: <enum: green | orange | red>        # Lighthouse
+    #     performance: <enum: green | orange | red | n/a>  # Lighthouse (n/a sans interface)
     #     privacy: <enum: green | orange | red>            # cookie scanner
-    #     details_url: <string>            # rapport détaillé
-    #     blocking_issues: [<string>]
+    #     details_url: <string>            # rapport détaillé (https:// ou file:///)
+    #     blocking_issues: [<string>]      # "[SEC-01] message métier (localisation, règle)", un par constat rouge
+    #
+    #   rework_items: [<string>]           # liste de reprise du sprint, remplie par l'Orchestrateur : constats
+    #                                      # rouges d'Audit Tech, points orange retenus par Vincent, points
+    #                                      # [E2E-<story>] de QA E2E ; lue par Dev en rework
     #
     #   qa_e2e_report:
-    #     scenarios_count: <int>           # 3-5 max
+    #     scenarios_count: <int>           # 3-5 max (rapport absent si QA E2E skippé : "pas de recette")
     #     scenarios_passed: <int>
     #     screenshots_url: <string>
     #     videos_url: <string>
@@ -215,10 +263,11 @@ delivery:
     #   deploy_output:
     #     deployed_at: <ISO 8601 | null>
     #     delivery_url: <string | null>
-    #     deployment_method: <enum: auto | manual>
-    #     rollback_available: <bool>
+    #     deployment_method: <enum: auto | manual>   # manual = go explicite de Vincent (client)
+    #     rollback_available: <bool>       # une version précédente restaurable existait avant ce déploiement
+    #     health_check_status: <enum: green | red | not_run>
     #
-    #   sprint_review:
+    #   sprint_review:                   # écrit par l'Orchestrateur à la clôture du sprint
     #     completion_percentage: <float>
     #     blockers_encountered: [<string>]
     #     decisions_logged: [<int>]        # IDs des entrées decisions
@@ -237,6 +286,7 @@ feedback:
     #   suggestions: [<string>]
 
   # Couche 2 — Réel (KPIs + verbatims, après livraison)
+  # Écrit par : collecte analytics de l'Orchestrateur (jamais SENTINEL, qui n'écrit que sentinel_alerts)
   reel: []
     # - sprint_id: <int>
     #   kpi_name: <string>
@@ -250,7 +300,9 @@ feedback:
   sentinel_alerts: []
     # - timestamp: <ISO 8601>
     #   severity: <enum: info | warning | critical>
-    #   type: <string>                 # downtime, security, perf, etc.
+    #   type: <enum: downtime | fuite_donnees_potentielle | erreur_paiement | sentry_endpoint_critique |
+    #          erreurs_serveur | performance | regression_post_deploiement | quota_hebergeur | certificat |
+    #          limitation_debit | surveillance_degradee | nettoyage_logs>   # cf agents/sentinel.md
     #   message_metier: <string>       # langage non-tech
     #   action_taken_auto: <string | null>
     #   action_required_human: <string | null>
@@ -274,10 +326,10 @@ feedback:
 livrables:
   generated: []
     # - type: <enum: impact_map | story_map | roadmap | sprint_review | audit_report | decision_log>
-    #   version: <semver>             # ex: 1.0, 1.1
+    #   version: <string>             # X.Y : 1.0 puis +0.1 à chaque régénération (calculé par l'Orchestrateur)
     #   version_exec_url: <string>    # version Exécutif (1 page, métier)
     #   version_tech_url: <string>    # version Technique (détaillée, IT)
-    #   format: <enum: notion | html>
+    #   format: <enum: notion | html>   # le même pour les deux versions
     #   generated_at: <ISO 8601>
     #   trigger_event: <string>       # ce qui a déclenché la génération
-    #   sprint_id: <int | null>
+    #   sprint_id: <int | null>       # null pour impact_map, story_map, roadmap, decision_log

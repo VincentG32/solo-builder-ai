@@ -24,7 +24,7 @@ Dev prouve chaque story par un test d'intégration et Audit Tech vérifie le cod
 ### Ce que cet agent fait
 - Choisit 3 à 5 stories du sprint (d'abord celles marquées `qa_critical_path` par le PM) et écrit un scénario Playwright par story, fidèle à son Gherkin : connexion/authentification si présente, parcours principal, 2 à 3 cas limites critiques (refus, doublon, saisie invalide)
 - Fait exécuter les scénarios par l'Orchestrateur dans le bac à sable, sur le build local de `dev/sprint-<n>`, puis assemble la recette : compteurs mesurés, captures, vidéos, message métier par parcours
-- Renvoie à Dev (rework) les parcours en échec, sous forme de points `[E2E-<story>]` dans une liste de reprise du sprint
+- Renvoie à Dev (rework) les parcours en échec, sous forme de points `[E2E-<story>]` dans la liste de reprise du sprint (`rework_items`)
 
 ### Ce qu'il ne fait **PAS** (et qui s'en occupe)
 - ❌ Pas de tests unitaires ni d'intégration → c'est l'**Agent Dev** (qui corrige aussi le code en `rework` ; QA E2E ne modifie jamais un scénario pour le faire passer)
@@ -523,7 +523,7 @@ flowchart LR
 
 - **Amont** : Agent PM (`pm_output.stories`, `qa_critical_path`) · Agent Dev (`dev_output`, branche `dev/sprint-<n>` ; statuts des stories via le contexte de l'Orchestrateur) · Agent Audit Tech (`audit_verdict` 🟢, ou 🟠 accepté par Vincent et tracé dans `canvas.decisions`) · Agent TECH-ADVISOR (`stack_choisie`) · contexte et rapport d'exécution de l'Orchestrateur (build, Playwright, bac à sable)
 - **Aval** : Agent DEPLOY (verdict `vert` ou skip requis) · Agent Dev en `rework` (liste de reprise du sprint) · Canvas `canvas.delivery.sprints[].qa_e2e_report` · checkpoint de Vincent (recette visuelle)
-- **Skippable** : ✅ si projet sans interface (`composants.frontend` nul) ou no-code pur (`tier` 0) · **Boucle de retour** : verdict `rouge` : l'Orchestrateur place les points `[E2E-<story>]` dans une liste de reprise du sprint (et non dans `audit_tech_report.blocking_issues`, dont le format est réservé à Audit Tech) et relance Dev en `rework` (branche `dev/sprint-<n>-fix-<k>`), puis Audit Tech, puis rejoue les scripts figés. Décision de l'Orchestrateur : le compteur de reprises est partagé avec Audit Tech, 2 au plus par sprint, puis checkpoint humain
+- **Skippable** : ✅ si projet sans interface (`composants.frontend` nul) ou no-code pur (`tier` 0) · **Boucle de retour** : verdict `rouge` : l'Orchestrateur place les points `[E2E-<story>]` dans la liste de reprise du sprint, `canvas.delivery.sprints[].rework_items` (et non dans `audit_tech_report.blocking_issues`, dont le format est réservé à Audit Tech) et relance Dev en `rework` (branche `dev/sprint-<n>-fix-<k>`), puis Audit Tech, puis rejoue les scripts figés. Décision de l'Orchestrateur : le compteur de reprises est partagé avec Audit Tech, 2 au plus par sprint, puis checkpoint humain
 - **Checkpoint humain en aval ?** : ✅ si `security_flags` non vide, si `blocked`, ou après 2 reprises sans succès ; Vincent regarde de toute façon la recette avant la mise en ligne ; automatique (retour à Dev) si `rouge`
 
 ---
@@ -556,7 +556,7 @@ flowchart LR
 
 ## 14. Notes & questions ouvertes
 
-- [ ] **Écart schéma Canvas** : `qa_e2e_report` ne contient que les quatre compteurs et URL ; détail par parcours, `verdict`, `blocking_issues` et `alerts` n'ont pas de place au schéma (les ajouter pour DEPLOY et l'Insight Synthesizer, ou les garder dans l'état de l'Orchestrateur ?). Le Canvas n'a pas encore de liste de reprise au niveau du sprint (où l'Orchestrateur place les points `[E2E-<story>]` pour Dev, sans toucher à `audit_tech_report.blocking_issues`) : à ajouter au schéma
+- [ ] **Écart schéma Canvas** : `qa_e2e_report` ne contient que les quatre compteurs et URL ; détail par parcours, `verdict`, `blocking_issues` et `alerts` n'ont pas de place au schéma (les ajouter pour DEPLOY et l'Insight Synthesizer, ou les garder dans l'état de l'Orchestrateur ?). La liste de reprise du sprint est désormais au schéma (`rework_items`, remplie par l'Orchestrateur, lue par Dev)
 - [ ] **Écart de risque** : `light-specs.md` donne un risque sécu 🟡 limité, `data-classification.md` un plafond 🟠. Cette spec respecte les deux (le LLM n'a ni outil ni résultat à déclarer ; le traitement 🟠 est réservé à Ollama local) ; à confirmer
 - [ ] **Faux échecs de repérage** : un libellé changé peut faire échouer un script figé sans que le livrable soit faux. Autoriser une mise au point unique avant l'exécution officielle (assertions intactes), ou un outil d'exploration pour le LLM, au prix de la surface d'attaque ?
 - [ ] **Services managés hors ligne** : sans réseau, une stack avec base ou authentification managée (Supabase, etc.) exige un émulateur local dans l'image du tier (`tools/sandboxing.md`), sinon tous les parcours échouent

@@ -24,9 +24,9 @@
 flowchart TD
     A[meta<br/>identité du projet] --> B[decisions<br/>journal des forçages/validations]
     A --> C[discovery<br/>brief + coach + agents Discovery]
-    C --> D[tech_advisor<br/>choix de stack]
-    D --> E[gtm<br/>stratégie + MVP + métriques]
-    E --> F[delivery<br/>sprints + code + audits + QA]
+    C --> E[gtm<br/>stratégie + MVP + métriques]
+    E --> D[tech_advisor<br/>choix de stack]
+    D --> F[delivery<br/>sprints + code + audits + QA]
     F --> G[feedback<br/>synthétique + réel + insights]
     G --> H[livrables<br/>artefacts générés par Agent Livrable]
 
@@ -67,7 +67,7 @@ solo-builder-ai/
 ├── canvas/
 │   ├── README.md                       (ce fichier)
 │   ├── schema.yml                      (schéma annoté — modèle vide)
-│   └── example-cv-interactif.yml       (cas concret rétroactif)
+│   └── example-pulse.yml               (cas concret rétroactif)
 └── projects/                           (au runtime — pas commité par défaut)
     ├── cv-interactif.yml               (cas réel — éventuellement publié si 🟢)
     ├── apport-affaires.yml             (🟠 Sensible — local uniquement)
@@ -90,17 +90,18 @@ solo-builder-ai/
 | `decisions` | Orchestrateur à chaque checkpoint | Continu |
 | `discovery.brief_initial` | Moi | Démarrage |
 | `discovery.coach_interview` | Agent Coach | Phase Discovery |
-| `discovery.ember_razor_output` | Agent EMBER+RAZOR (si mode Standard/Complet) | Phase Discovery |
+| `discovery.ember_razor_output` | Agent EMBER+RAZOR (si mode Complet) | Phase Discovery |
 | `discovery.contrarian_output` | Agent CONTRARIAN (si mode Standard/Complet) | Phase Discovery |
 | `discovery.judge_verdict` | Agent JUDGE (si mode Standard/Complet) | Fin phase Discovery |
 | `tech_advisor` | Agent TECH-ADVISOR | Entre GTM et Delivery |
 | `gtm.strategie` | Agent GTM (mode 1) | Phase GTM |
 | `gtm.mvp_scope` | Agent GTM (mode 2) | Phase GTM |
 | `gtm.metric_setter` | Agent GTM (mode 3) | Phase GTM |
-| `delivery.sprints[]` | Agents PM / Dev / Audit Tech / QA E2E / DEPLOY | Phase Delivery itérative |
+| `delivery.sprints[]` | Agents PM / Dev / Audit Tech / QA E2E / DEPLOY ; `rework_items` (liste de reprise), `start_at`, `end_at` et `sprint_review` (à la clôture du sprint) : Orchestrateur | Phase Delivery itérative |
 | `feedback.synthetique` | 4 personas synthétiques | Avant chaque livraison |
-| `feedback.reel` | Agent SENTINEL + tracking analytics | Après chaque livraison |
-| `feedback.insights` | Insight Synthesizer | Après feedback collecté |
+| `feedback.reel` | Collecte analytics de l'Orchestrateur (SENTINEL n'écrit que `feedback.sentinel_alerts`) | Après chaque livraison |
+| `feedback.sentinel_alerts` | Agent SENTINEL | En continu après la livraison |
+| `feedback.insights_synthesizer_output` | Insight Synthesizer | Après feedback collecté |
 | `livrables.generated[]` | Agent Livrable | Event-driven selon phase |
 
 ---

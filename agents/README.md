@@ -1,6 +1,6 @@
 # 🤖 Agents — Index
 
-> **Statut** : V3 du système. 12 agents identifiés (8 actifs en régime de croisière + 4 conditionnels).
+> **Statut** : V3 du système. 14 agents, tous en spec exécutable (cohérence croisée vérifiée le 2026-11-24).
 
 ---
 
@@ -36,23 +36,25 @@ flowchart TD
 | # | Agent | Phase | Statut spec | Mode | Skippable |
 |---|---|---|---|---|---|
 | 1 | [COACH](coach.md) | Discovery | ✅ Spec exécutable | perso + client | jamais |
-| 2 | [EMBER+RAZOR](ember-razor.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
-| 3 | [CONTRARIAN](contrarian.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
-| 4 | [JUDGE](judge.md) | Discovery | 🕐 À spec | perso + client | ✅ Express |
-| 5 | [GTM](gtm.md) | GTM | 🕐 À spec | perso + client | ✅ si outil one-shot |
+| 2 | [EMBER+RAZOR](ember-razor.md) | Discovery | ✅ Spec exécutable | perso + client | ✅ sauf Complet |
+| 3 | [CONTRARIAN](contrarian.md) | Discovery | ✅ Spec exécutable | perso + client | ✅ Express |
+| 4 | [JUDGE](judge.md) | Discovery | ✅ Spec exécutable | perso + client | ✅ Express |
+| 5 | [GTM](gtm.md) | GTM | ✅ Spec exécutable | perso + client | ✅ si outil one-shot |
 | 6 | [TECH-ADVISOR](tech-advisor.md) | Transverse | ✅ Spec exécutable | perso + client | ✅ si stack imposée |
-| 7 | [PM](pm.md) | Delivery | 🕐 À spec | perso + client | ❌ sauf no-code pur |
-| 8 | [Dev](dev.md) | Delivery | 🕐 À spec | perso + client | ❌ sauf no-code pur |
-| 9 | [Audit Tech](audit-tech.md) | Delivery | 🕐 À spec | perso + client | jamais |
-| 10 | [QA E2E](qa-e2e.md) | Delivery | 🕐 À spec | perso + client | ✅ si pas d'UI |
-| 11 | [DEPLOY](deploy.md) | Delivery | 🕐 À spec | perso + client | ✅ si pas de déploiement |
-| 12 | [SENTINEL](sentinel.md) | Feedback | 🕐 À spec | perso + client | ❌ en prod |
-| 13 | [Insight Synthesizer](insight-synthesizer.md) | Feedback | 🕐 À spec | perso + client | ✅ si pas d'utilisateurs |
-| 14 | [Livrable](livrable.md) | Transverse | 🕐 À spec | client surtout | ✅ off par défaut en perso |
+| 7 | [PM](pm.md) | Delivery | ✅ Spec exécutable | perso + client | ❌ sauf no-code pur |
+| 8 | [Dev](dev.md) | Delivery | ✅ Spec exécutable | perso + client | ❌ sauf no-code pur |
+| 9 | [Audit Tech](audit-tech.md) | Delivery | ✅ Spec exécutable | perso + client | jamais |
+| 10 | [QA E2E](qa-e2e.md) | Delivery | ✅ Spec exécutable | perso + client | ✅ si pas d'UI |
+| 11 | [DEPLOY](deploy.md) | Delivery | ✅ Spec exécutable | perso + client | ✅ si pas de déploiement |
+| 12 | [SENTINEL](sentinel.md) | Feedback | ✅ Spec exécutable | perso + client | ❌ en prod |
+| 13 | [Insight Synthesizer](insight-synthesizer.md) | Feedback | ✅ Spec exécutable | perso + client | ✅ si pas d'utilisateurs |
+| 14 | [Livrable](livrable.md) | Transverse | ✅ Spec exécutable | client surtout | ✅ off par défaut en perso |
 
 ---
 
 ## 🎯 Ordre de spécification (priorisé MVP système)
+
+> Historique : les 14 specs sont désormais écrites.
 
 Cf [`policies/perso-profile.md`](../policies/perso-profile.md) — les 4 agents prioritaires pour livrer un MVP système fonctionnel rapidement :
 
@@ -70,9 +72,9 @@ Les autres viennent après, ordre indicatif :
 
 Tous les agents respectent [`_TEMPLATE.md`](_TEMPLATE.md) — 14 sections obligatoires, prompt versioning inline, golden cases avec critères Python testables, section Sécurité par agent.
 
-## 🟡 Cadrages légers des 12 agents restants
+## 🟡 Cadrages légers
 
-Vue d'ensemble pour la cohérence du système : [`light-specs.md`](light-specs.md). Les prompts v1.0 et les golden cases Python testables seront rédigés agent par agent au passage en spec exécutable.
+Vue d'ensemble pour la cohérence du système (rôles, modèles, coûts) : [`light-specs.md`](light-specs.md). Chaque section renvoie à la spec exécutable de l'agent, qui fait référence en cas d'écart, sauf pour le rôle et le modèle, fixés dans `light-specs.md`.
 
 ---
 
