@@ -47,8 +47,8 @@ Sans TECH-ADVISOR, le choix de stack revient implicitement à **l'Agent Dev**, q
 | `canvas.meta.mode` | enum | perso / client | ✅ |
 | `canvas.meta.data_classification_max` | enum | Influence routage (🟠 Sensible → Ollama compatible / hosting EU) | ✅ |
 | `canvas.discovery.coach_interview.summary_brief_enrichi` | string | Brief enrichi par Coach | ✅ |
-| `canvas.gtm.strategie` | objet | Cible + canal + volume estimé | ✅ |
-| `canvas.gtm.mvp_scope` | objet | Must/Should/Later → détermine la complexité technique | ✅ |
+| `canvas.gtm.strategie` | objet | Cible (dont « Volume estimé : <nombre> », porté par `cible`) + canal | ✅ |
+| `canvas.gtm.mvp_scope` | objet | Must/Should/Later → détermine la complexité technique (GTM sauté : périmètre minimal fourni par Vincent au checkpoint, cf section 14) | ✅ |
 | `canvas.gtm.metric_setter.kpis` | liste | Métriques cibles (donne idée du volume) | ❌ |
 | Stack forcée par Vincent | string | Si Vincent a déjà choisi sa stack, mentionné dans le brief | ❌ |
 
@@ -424,7 +424,11 @@ canvas:
         Airtable + Make + Apify + Waalaxy + Yousign. Modèle Chris Scholly.
   gtm:
     strategie: {...}
-    mvp_scope: {must: ["CRM contacts", "Pipeline opportunités", "Commissions tracking"]}
+    mvp_scope:
+      must:
+        - {feature: "CRM contacts", description: "Fiches des contacts apporteurs et prospects.", acceptance: "Un contact créé apparaît dans la liste en moins de 5 secondes."}
+        - {feature: "Pipeline opportunités", description: "Suivi des opportunités par étape.", acceptance: "Une opportunité change d'étape et l'étape est visible par tous."}
+        - {feature: "Commissions tracking", description: "Calcul des commissions dues par opportunité gagnée.", acceptance: "Une opportunité gagnée affiche le montant de commission attendu."}
 ```
 
 **Critères Python testables** :
@@ -452,7 +456,12 @@ canvas:
         Appli de coaching santé/fitness, potentiellement transformable en
         SaaS pour vendre à d'autres utilisateurs à terme.
   gtm:
-    mvp_scope: {must: ["Programme suivi", "Tracking poids/macros", "Coach IA"]}
+    strategie: {...}
+    mvp_scope:
+      must:
+        - {feature: "Programme suivi", description: "Programme d'entraînement personnalisé par semaine.", acceptance: "L'utilisateur voit son programme de la semaine dès la connexion."}
+        - {feature: "Tracking poids/macros", description: "Saisie quotidienne du poids et des macros.", acceptance: "Une saisie du jour apparaît dans la courbe de la semaine."}
+        - {feature: "Coach IA", description: "Conseils générés à partir des saisies de la semaine.", acceptance: "Un conseil hebdomadaire s'affiche après au moins 3 saisies."}
 ```
 
 **Critères Python testables** :
@@ -483,8 +492,8 @@ flowchart LR
     style ME fill:#e1f5ff
 ```
 
-- **Amont** : `canvas.discovery` + `canvas.gtm` (idéalement après GTM, mais peut fonctionner avec Discovery seule)
-- **Aval** : Agent PM, Agent Audit Tech, Agent DEPLOY
+- **Amont** : `canvas.discovery` + `canvas.gtm` (toujours après GTM ; si GTM est sauté, seulement avec un périmètre minimal fourni par Vincent au checkpoint, cf section 14)
+- **Aval** : Agent PM, Agent Dev, Agent Audit Tech, Agent QA E2E, Agent DEPLOY (tous lisent `stack_choisie`)
 - **Skippable** : ✅ si Vincent impose une stack dans le brief ou en checkpoint humain (mode `skipped`)
 - **Checkpoint humain en aval ?** : ✅ obligatoire — je valide la stack proposée ou je force
 
@@ -537,3 +546,4 @@ flowchart LR
 - [ ] **Estimations de coût** : à affiner avec retours réels (free tier → 25€ à quel volume ?)
 - [ ] **Cycle de mise à jour catalogue** : trimestrielle ? À chaque nouveau projet ?
 - [ ] **Versioning explicite du catalogue** : quand on enrichit, on passe le prompt en v1.1 ?
+- [ ] **GTM sauté (outil one-shot)** : Contrat à définir par Vincent quand GTM est sauté : en attendant, TECH-ADVISOR et PM attendent un périmètre minimal fourni par Vincent au checkpoint.

@@ -510,7 +510,7 @@ flowchart LR
 ```
 
 - **Amont** (consomme l'output de) : COACH (`summary_brief_enrichi`, `angles_morts_detectes`, `questions_recommandees_pour_la_suite`) · EMBER+RAZOR (`ember_razor_output`, mode Complet)
-- **Aval** (alimente) : JUDGE (lit `canvas.discovery.contrarian_output` et `canvas.decisions`) · **Skippable en mode** : Express ✅ / Standard ❌ / Complet ❌
+- **Aval** (alimente) : JUDGE (lit `canvas.discovery.contrarian_output` et `canvas.decisions`) · GTM (lit `fatal_flaws`, `hidden_assumptions`) · **Skippable en mode** : Express ✅ / Standard ❌ / Complet ❌
 - **Checkpoint humain en aval ?** : ❌ optionnel (Vincent peut traiter les défauts avant JUDGE ; sinon il tranche au checkpoint de JUDGE)
 
 ### Contrat avec JUDGE : quand un `fatal_flaw` est « résolu »
@@ -561,9 +561,9 @@ Pas de recherche web, donc pas de coût annexe. Budget maximal et timeout : sect
 
 ## 14. Notes & questions ouvertes
 
-- [ ] **Format de `contrarian_output` dans le schéma Canvas** : `canvas/schema.yml` décrit les trois listes comme `[<string>]` ; la spec les structure (id, catégorie, gravité, références). Mettre à jour le schéma pour que l'Orchestrateur et JUDGE partagent le contrat.
+- [x] **Format de `contrarian_output` dans le schéma Canvas** : `canvas/schema.yml` décrit les trois listes comme `[<string>]` ; la spec les structure (id, catégorie, gravité, références). Mettre à jour le schéma pour que l'Orchestrateur et JUDGE partagent le contrat. *Mis à jour le 2026-11-24 : reporté dans `canvas/schema.yml`.*
 - [ ] **Alignement avec la spec JUDGE** : la gate doit lire `id` et `canvas.decisions` selon la section 11. Un `forçage` rend-il la gate franchissable ? Question pour JUDGE ; la spec CONTRARIAN ne le compte pas comme résolution.
 - [ ] **Stabilité des identifiants entre deux runs** : un re-run (brief modifié après pivot) génère de nouveaux `id`, les décisions de l'ancien run ne s'y rattachent pas. Option : passer l'ancien `contrarian_output` en entrée pour réutiliser les `id` encore valides.
-- [ ] **Écart de périmètre EMBER+RAZOR** : `light-specs.md` le limite au mode Complet, `canvas/schema.yml` le dit présent en Standard ou Complet. Cette spec suit light-specs ; corriger le schéma.
+- [x] **Écart de périmètre EMBER+RAZOR** : `light-specs.md` le limite au mode Complet, `canvas/schema.yml` le dit présent en Standard ou Complet. Cette spec suit light-specs ; corriger le schéma. *Mis à jour le 2026-11-24 : reporté dans `canvas/schema.yml`.*
 - [ ] **Complaisance subtile** : « rester positif » est testé (cas 3), pas un brief rédigé pour que tout paraisse déjà résolu. Piste : cas adversarial supplémentaire et indicateur de dérive (section 12).
 - [ ] **Juridique et fiscal sans source** : l'agent ne peut que signaler « à vérifier ». Prévoir une étape ultérieure (avocat, expert-comptable, source officielle via EMBER+RAZOR) pour les projets à forte contrainte légale ? À décider avec Vincent.

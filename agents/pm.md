@@ -544,12 +544,11 @@ flowchart LR
     C[Canvas.delivery<br/>sprints précédents] --> PM
     D[Canvas.decisions] --> PM
     PM --> E[Agent Dev<br/>tests d'intégration BDD]
-    PM --> F[Agent Audit Tech]
     PM --> G[Agent QA E2E<br/>parcours critiques]
 ```
 
-- **Amont** : GTM (`canvas.gtm.mvp_scope`), TECH-ADVISOR (`canvas.tech_advisor.stack_choisie`), sprints précédents (`pm_output`, `sprint_review`), `canvas.decisions`
-- **Aval** : Dev (reprend `bdd_scenario` comme tests d'intégration, nomme ses tests d'après `id`), Audit Tech (contexte fonctionnel), QA E2E (parcours des stories `qa_critical_path`, identifiés par `id`)
+- **Amont** : GTM (`canvas.gtm.mvp_scope`), TECH-ADVISOR (`canvas.tech_advisor.stack_choisie`), sprints précédents (`pm_output`, `sprint_review`), `canvas.decisions` ; relancé pour le sprint suivant après une recommandation `backlog_next` de l'Insight Synthesizer validée par Vincent
+- **Aval** : Dev (reprend `bdd_scenario` comme tests d'intégration, nomme ses tests d'après `id`), QA E2E (parcours des stories `qa_critical_path`, identifiés par `id`)
 - **Skippable** : ❌ sauf no-code pur (`stack_choisie.tier == 0`, cf [`light-specs.md`](light-specs.md#8-pm)) ; l'Orchestrateur décide le skip avant l'appel au modèle, l'agent le reconfirme si l'appel a lieu
 - **Checkpoint humain en aval ?** : ✅ obligatoire, Vincent valide les stories du sprint (toujours, et a fortiori si `security_flags` ou `scope_alert` non vides)
 
@@ -583,7 +582,8 @@ flowchart LR
 
 ## 14. Notes & questions ouvertes
 
-- [ ] **Écart schéma / light-specs sur les critères** : `light-specs.md` impose « 1 story = 1 critère d'acceptance exécutable », alors que `canvas/schema.yml` déclare `acceptance_criteria: [<string>]` (liste). La spec suit light-specs (liste de longueur exactement 1) et garde le nom de champ du schéma. À trancher : garder une liste à 1 élément, ou changer le schéma en chaîne.
-- [ ] **Écart schéma / spec sur `tickets`** : le schéma Canvas laisse `tickets: []` sans format et light-specs parle de « tickets priorisés ». V1 : 1 ticket par story (id, ordre, dépendances). Faut-il un vrai niveau de tâches (ex : corrections issues de l'Audit Tech) ? Aujourd'hui les corrections post-audit n'ont pas de ticket.
+- [ ] **Écart schéma / light-specs sur les critères** : `light-specs.md` impose « 1 story = 1 critère d'acceptance exécutable », alors que `canvas/schema.yml` déclare `acceptance_criteria: [<string>]` (liste). La spec suit light-specs (liste de longueur exactement 1) et garde le nom de champ du schéma. À trancher : garder une liste à 1 élément, ou changer le schéma en chaîne. *Mis à jour le 2026-11-24 : « exactement 1 élément » reporté en commentaire dans `canvas/schema.yml`.*
+- [ ] **Écart schéma / spec sur `tickets`** : le schéma Canvas laisse `tickets: []` sans format et light-specs parle de « tickets priorisés ». V1 : 1 ticket par story (id, ordre, dépendances). Faut-il un vrai niveau de tâches (ex : corrections issues de l'Audit Tech) ? Aujourd'hui les corrections post-audit n'ont pas de ticket. *Mis à jour le 2026-11-24 : format V1 des tickets reporté dans `canvas/schema.yml`.*
 - [ ] **Statut par story absent du schéma** : `sprint_review` ne contient que `completion_percentage` et `blockers_encountered`. V1 : PM ne reporte une story que si un blocage cite son id (`S1-02`), sinon `report_indetermine`. Proposer plutôt un champ `stories_status` dans `sprint_review` ?
 - [ ] **Liste de mots interdits (`JARGON`)** : risque de faux positifs (ex : « token » dans un produit qui parle de jetons de jeu) ; à calibrer sur les premiers sprints, avec une liste d'exceptions par projet ?
+- [ ] **GTM sauté (outil one-shot)** : Contrat à définir par Vincent quand GTM est sauté : en attendant, TECH-ADVISOR et PM attendent un périmètre minimal fourni par Vincent au checkpoint.

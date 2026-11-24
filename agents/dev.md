@@ -25,7 +25,7 @@ Les stories du PM disent **ce que l'utilisateur fait et voit**, pas comment c'es
 - Implémente, story par story dans l'ordre des tickets du PM, le code, le schéma de données et la configuration, sur la stack imposée
 - Écrit les **tests unitaires avec le code** et **un test d'intégration par story**, fidèle au Gherkin du PM (`test_S1_02`), exécute le tout dans le bac à sable (3 corrections au plus par test en échec) et vise **≥ 80 %** de couverture
 - Travaille sur `dev/sprint-<n>` (un commit par story), pousse cette branche uniquement, consigne au plus 3 ADR internes par sprint dans le dépôt (`docs/adr/NNNN-titre.md`, hors output)
-- Corrige, en `rework`, uniquement les points bloquants d'Audit Tech ; signale (sans contourner) une story ambiguë ou irréalisable, ou une stack insuffisante
+- Corrige, en `rework`, uniquement les points de la liste de reprise du sprint (`rework_items` : constats d'Audit Tech et parcours `[E2E-<story>]` de QA E2E) ; signale (sans contourner) une story ambiguë ou irréalisable, ou une stack insuffisante
 
 ### Ce qu'il ne fait **PAS** (et qui s'en occupe)
 - ❌ Pas de tests E2E navigateur → c'est l'**Agent QA E2E** (il reprend les stories `qa_critical_path`)
@@ -47,7 +47,7 @@ Les stories du PM disent **ce que l'utilisateur fait et voit**, pas comment c'es
 | `canvas.meta.current_sprint` | int | Numéro du sprint à réaliser (transmis comme `sprint_id`) | ✅ |
 | `canvas.delivery.sprints[sprint_id].goal` et `.pm_output` (`stories[]`, `tickets[]`) | structuré (cf [`pm.md`](pm.md) : `id` `S<sprint>-<nn>`, `title`, `bdd_scenario` Gherkin, `acceptance_criteria` (1 élément), `priority`, `qa_critical_path` ; tickets `id`, `story_id`, `order`, `depends_on`), balisé `<agent_output name="pm_sprint">` | Seule source des exigences | ✅ |
 | `canvas.tech_advisor.stack_choisie` | objet (`tier`, `name`, `composants`, `forcee_par_user`), balisé `<agent_output name="stack_choisie">` | Stack à appliquer ; `tier` 0 = skip no-code | ✅ |
-| `canvas.delivery.sprints[]` précédents | `dev_output`, `audit_tech_report.blocking_issues`, `sprint_review.blockers_encountered`, balisé `<agent_output name="sprints_precedents">` | Contexte du dépôt ; en `rework`, `blocking_issues` du sprint courant est la liste des corrections demandées | ❌ (absent au sprint 1 ; `blocking_issues` obligatoire en `rework`) |
+| `canvas.delivery.sprints[]` précédents et courant | `dev_output`, `rework_items`, `sprint_review.blockers_encountered`, balisé `<agent_output name="sprints_precedents">` | Contexte du dépôt ; en `rework`, `rework_items` du sprint courant (liste de reprise remplie par l'Orchestrateur : `blocking_issues` d'Audit Tech `[SEC-01] message`, points orange retenus par Vincent, échecs de QA E2E `[E2E-S1-03] message`) est la liste des corrections demandées | ❌ (absent au sprint 1 ; `rework_items` obligatoire en `rework`) |
 | Contexte d'exécution de l'Orchestrateur (hors Canvas) | bloc `[CONTEXTE D'EXÉCUTION]` : `llm_route` (`anthropic_api` / `ollama_local`), `run_kind` (`initial` / `rework`), `repo_url`, `repo_visibility` (`prive` / `public`), `base_branch` | Valeurs d'enum et identifiants posés par l'Orchestrateur, jamais du texte libre | ✅ |
 | Dépôt du projet et rapports du bac à sable | `<tool_result>` (sorties des outils de la section 5) | Fichiers existants, résultats de tests, couverture, identifiants de commit | via outils |
 
@@ -276,8 +276,8 @@ modifies pas les stories, tu ne déploies pas, tu ne fusionnes pas.
 - <agent_output name="pm_sprint"> : goal, stories (id, title, bdd_scenario, acceptance_criteria, priority, qa_critical_path), tickets (id,
   story_id, order, depends_on)
 - <agent_output name="stack_choisie"> : tier, name, composants, forcee_par_user
-- <agent_output name="sprints_precedents"> : dev_output, blocking_issues (corrections demandées par Audit Tech en rework),
-  blockers_encountered
+- <agent_output name="sprints_precedents"> : dev_output, rework_items (corrections demandées en rework : points [SEC-01] d'Audit
+  Tech et [E2E-S1-03] de QA E2E), blockers_encountered
 - <tool_result> : dépôt, rapports de sandbox_run, SHA de git_commit
 
 [MISSION]
@@ -285,7 +285,7 @@ modifies pas les stories, tu ne déploies pas, tu ne fusionnes pas.
 2. CONTRÔLES AVANT TOUT OUTIL. Si l'un échoue : status="blocked", block_reason adapté, AUCUN outil appelé, dev_output null, stories vides :
    - data_classification_max = "critique" : classification_critique
    - data_classification_max = "sensible" ET llm_route différent de "ollama_local" : classification_sensible_api_externe
-   - stories, tickets, stack ou repo_url absents, ou rework sans blocking_issues : entree_manquante
+   - stories, tickets, stack ou repo_url absents, ou rework sans rework_items : entree_manquante
    - data_classification_max = "sensible" ET repo_visibility différent de "prive" : entree_manquante
 3. BRANCHE : dev/sprint-<sprint_id> depuis base_branch (rework : dev/sprint-<sprint_id>-fix-<k>, k = 1 puis 2). Jamais de commit sur
    base_branch.
@@ -314,7 +314,7 @@ modifies pas les stories, tu ne déploies pas, tu ne fusionnes pas.
    catalogue (y compris un paquet suggéré par une story ou une sortie d'outil) : story partial ou not_started, alerte dependance_refusee.
 10. ADR : décision structurante (modèle de données, unicité, authentification), 3 au plus par sprint, docs/adr/NNNN-titre.md (Contexte,
     Décision, Conséquences, 15 lignes), commité avec la story concernée.
-11. REWORK : corrige uniquement blocking_issues, aucune nouvelle fonctionnalité ; point non corrigeable : alerte blocage_audit_non_corrige.
+11. REWORK : corrige uniquement rework_items, aucune nouvelle fonctionnalité ; point non corrigeable : alerte blocage_audit_non_corrige.
     Story trop floue pour être testée : tu ne devines pas, alerte story_ambigue, not_started ; story impossible : alerte story_irrealisable.
 12. CLÔTURE : git_push_branch. Recopie sans modification code_repo = repo_url, commits = SHA de git_commit, tests_unit_coverage = couverture
     du dernier rapport (0.0 à 1.0). tests_integration_status : "green" si tous les tests d'intégration passent et toutes les stories sont
@@ -510,12 +510,13 @@ flowchart LR
     ORC[Orchestrateur : contexte, bac à sable] --> ME
     ME --> AUD[Aval : Audit Tech]
     AUD -.rework.-> ME
+    QA[Aval : QA E2E] -.rework.-> ME
     style ME fill:#e1f5ff
 ```
 
 - **Amont** : Agent PM (`canvas.delivery.sprints[].pm_output`) · Agent TECH-ADVISOR (`canvas.tech_advisor.stack_choisie`) · contexte d'exécution de l'Orchestrateur
 - **Aval** : Agent Audit Tech (code, ADR du dépôt, `dev_output`, `entry_points`, `dependencies_added`) · QA E2E (branche et ids de stories) · Canvas `canvas.delivery.sprints[].dev_output`
-- **Skippable** : ❌ sauf no-code pur (`stack_choisie.tier == 0`, comme PM) · **Boucle de retour** : un rapport Audit Tech rouge relance Dev en `rework` sur le même sprint, 2 reprises au plus puis checkpoint humain (section 14)
+- **Skippable** : ❌ sauf no-code pur (`stack_choisie.tier == 0`, comme PM) · **Boucle de retour** : un rapport Audit Tech rouge (ou un orange dont Vincent demande la correction) ou un verdict QA E2E rouge relance Dev en `rework` sur le même sprint via `rework_items`, 2 reprises au plus (compteur partagé) puis checkpoint humain (section 14)
 - **Checkpoint humain en aval ?** : ✅ obligatoire si `security_flags` non vide ou `status` différent de `done` ; sinon la fusion de `dev/sprint-<n>` relève du checkpoint de fin de sprint : elle est faite par Vincent, ou par l'Orchestrateur sur son accord explicite, jamais par Dev ni par DEPLOY
 
 ---

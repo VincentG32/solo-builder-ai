@@ -476,7 +476,7 @@ flowchart LR
     style ME fill:#e1f5ff
 ```
 
-- **Amont** : Brief humain + (optionnel) documents `contexte/<projet>/`
+- **Amont** : Brief humain + (optionnel) documents `contexte/<projet>/` ; en cas de relance de Discovery décidée par Vincent après une recommandation `discovery_relance` de l'Insight Synthesizer, l'entrée reste un brief humain (réécrit par Vincent)
 - **Aval** :
   - Mode Express → GTM directement
   - Mode Standard → CONTRARIAN puis JUDGE

@@ -1,7 +1,7 @@
-# Cadrages légers des 12 agents restants
+# Cadrages légers des 12 agents restants (titre historique)
 
-> **Statut** : 🟡 Cadrage léger (vue d'ensemble pour cohérence système). Les prompts système v1.0 et golden cases Python testables seront rédigés agent par agent lors du passage en spec exécutable.
-> **Owner** : Vincent · **Dernière MAJ** : 2026-11-18
+> **Statut** : 🟡 Cadrage léger (vue d'ensemble pour cohérence système). Les 12 agents ci-dessous ont désormais une spec exécutable (prompt v1.0, golden cases Python testables), liée sous chaque section : en cas d'écart, la spec exécutable fait référence ; rôles et modèles restent fixés ici.
+> **Owner** : Vincent · **Dernière MAJ** : 2026-11-24
 > **Référence template** : [`_TEMPLATE.md`](_TEMPLATE.md)
 
 ---
@@ -23,7 +23,7 @@
 | 14 | Insight Synthesizer | Feedback | Opus 5.5 | ✅ | ✅ si pas d'utilisateurs |
 | 15 | Livrable | Transverse | Haiku 5.5 | ❌ | ✅ off par défaut en perso |
 
-> Agents critiques (6) : golden case **adversarial obligatoire** quand on passera en spec exécutable.
+> Agents critiques (6) : golden case **adversarial obligatoire** quand on passera en spec exécutable (note historique : c'est fait dans chaque spec).
 
 ---
 
@@ -51,6 +51,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 ---
 
 ## 3. EMBER+RAZOR
+
+Spec exécutable : [`ember-razor.md`](ember-razor.md)
 
 **Rôle** : Pitche l'idée avec preuves positives (Reddit, HN, G2, Product Hunt, Crunchbase, Data.gouv), puis la challenge immédiatement avec preuves contraires (Failory, articles critiques, concurrents morts). Débat interne dans un seul agent.
 
@@ -80,6 +82,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 
 ## 4. CONTRARIAN
 
+Spec exécutable : [`contrarian.md`](contrarian.md)
+
 **Rôle** : Attaque les assumptions cachées, celles que Vincent ne questionne pas car il les croit évidentes. Fatal flaws, hidden assumptions, stress-test questions.
 
 **Phase** : Discovery (actif en mode **Standard** et **Complet**).
@@ -107,6 +111,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 ---
 
 ## 5. JUDGE
+
+Spec exécutable : [`judge.md`](judge.md)
 
 **Rôle** : Verdict Go/No-Go strict basé sur gates binaires (pattern Mycelium). Non charmable. Si preuves absentes → blocage automatique.
 
@@ -142,6 +148,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 
 ## 6. GTM
 
+Spec exécutable : [`gtm.md`](gtm.md)
+
 **Rôle** : 3 modes séquentiels dans un seul agent (Stratégie → MVP Scoper → Metric Setter).
 
 **Phase** : GTM.
@@ -160,7 +168,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 - Le Must doit être livrable en 1 sprint par un non-dev avec aide LLM.
 - En perso : outputs allégés (1 page au lieu de 3, checkpoint express).
 
-**Dépendances** : amont = Discovery (tous modes) · aval = TECH-ADVISOR · skippable si projet "outil one-shot" sans cible utilisateur.
+**Dépendances** : amont = Discovery (tous modes), ou Insight Synthesizer après un pivot validé par Vincent · aval = TECH-ADVISOR (puis PM) · skippable si projet "outil one-shot" sans cible utilisateur.
 
 **Risque sécu** : 🟡 limité, pas d'ingestion externe.
 
@@ -169,6 +177,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 ---
 
 ## 8. PM
+
+Spec exécutable : [`pm.md`](pm.md)
 
 **Rôle** : Transforme le scope GTM en specs structurées, stories BDD/Gherkin, tickets priorisés, critères d'acceptance.
 
@@ -188,7 +198,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 - Max 5-7 stories par sprint (sinon découpage).
 - Pas de jargon technique dans les stories (Vincent valide sans lire du code).
 
-**Dépendances** : amont = GTM + TECH-ADVISOR · aval = Dev + Audit Tech + QA E2E · non skippable sauf no-code pur.
+**Dépendances** : amont = GTM + TECH-ADVISOR · aval = Dev + QA E2E · non skippable sauf no-code pur.
 
 **Risque sécu** : 🟡 limité.
 
@@ -197,6 +207,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 ---
 
 ## 9. Dev
+
+Spec exécutable : [`dev.md`](dev.md)
 
 **Rôle** : Produit le code, l'architecture, le schéma de BDD. Génère ses propres tests unitaires et d'intégration.
 
@@ -217,7 +229,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 - Bloqué si classification 🟠 Sensible et modèle API externe utilisé (routage Ollama local obligatoire).
 - Code commenté minimalement (le "quoi" via noms clairs, le "pourquoi" uniquement si non-évident).
 
-**Dépendances** : amont = PM + TECH-ADVISOR · aval = Audit Tech · non skippable sauf no-code pur.
+**Dépendances** : amont = PM + TECH-ADVISOR · aval = Audit Tech et QA E2E · non skippable sauf no-code pur.
 
 **Risque sécu** : 🟠 **sandboxing obligatoire**. Le code généré ne s'exécute jamais sur la machine de Vincent (Docker isolé sans accès réseau host).
 
@@ -226,6 +238,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 ---
 
 ## 10. Audit Tech élargi
+
+Spec exécutable : [`audit-tech.md`](audit-tech.md)
 
 **Rôle** : Vérifie sécurité, qualité code, accessibilité, scalabilité, performance, privacy. 100 % automatique via CLI, synthèse LLM minimale.
 
@@ -237,7 +251,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 
 **Inputs** : code produit par Dev (lien repo + branch).
 
-**Outputs** : `canvas.delivery.sprints[].audit_tech_report` avec 6 feux R/O/V : `securite`, `qualite_code`, `accessibilite`, `scalabilite`, `performance`, `privacy` + `blocking_issues[]` + `security_flags[]`.
+**Outputs** : `canvas.delivery.sprints[].audit_tech_report` avec 6 feux R/O/V : `securite`, `qualite_code`, `accessibilite`, `scalabilite`, `performance`, `privacy` + `details_url` + `blocking_issues[]` ; `security_flags[]` est dans la sortie de l'agent (checkpoint), pas dans le rapport du Canvas.
 
 **Outils CLI mobilisés** (zéro tokens LLM) :
 
@@ -267,6 +281,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 
 ## 11. QA E2E
 
+Spec exécutable : [`qa-e2e.md`](qa-e2e.md)
+
 **Rôle** : Teste les parcours utilisateur réels dans un vrai navigateur via Playwright. 3-5 parcours critiques maximum.
 
 **Phase** : Delivery.
@@ -285,7 +301,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 - Pas de tests exhaustifs (fragiles et coûteux).
 - Screenshots + vidéos = recette PO visuelle pour Vincent (zéro code à lire).
 
-**Dépendances** : amont = Dev + Audit Tech 🟢 · aval = DEPLOY · skippable si projet sans UI.
+**Dépendances** : amont = Dev + Audit Tech 🟢, ou 🟠 accepté par Vincent et tracé dans `canvas.decisions` · aval = DEPLOY · skippable si projet sans UI.
 
 **Risque sécu** : 🟡 limité.
 
@@ -295,6 +311,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 
 ## 12. DEPLOY
 
+Spec exécutable : [`deploy.md`](deploy.md)
+
 **Rôle** : Déploiement automatique avec garde-fous (CI/CD, observabilité runtime, rollback).
 
 **Phase** : Delivery (fin de sprint).
@@ -303,18 +321,18 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 - Fait : push vers hosting cible, vérification post-déploiement, bascule rollback si métriques rouges.
 - Ne fait pas : coder (Dev), monitoring continu (SENTINEL).
 
-**Inputs** : `canvas.tech_advisor.stack_choisie.composants.hosting` + `canvas.delivery.sprints[].audit_tech_report` (doit être 🟢) + `canvas.delivery.sprints[].qa_e2e_report`.
+**Inputs** : `canvas.tech_advisor.stack_choisie.composants.hosting` + `canvas.delivery.sprints[].audit_tech_report` (🟢, ou 🟠 accepté par Vincent et tracé ; jamais 🔴) + `canvas.delivery.sprints[].qa_e2e_report` (vert, ou QA E2E skippé).
 
 **Outputs** : `canvas.delivery.sprints[].deploy_output` avec `deployed_at`, `delivery_url`, `deployment_method`, `rollback_available`, `health_check_status`.
 
 **Comportements** :
 - Vercel / Netlify par défaut (free tiers).
-- Déploiement = `git push` → CI/CD → health check post-deploy automatique.
+- Déploiement = la branche `dev/*` est fusionnée par Vincent (ou par l'Orchestrateur sur son accord tracé), puis l'Orchestrateur déclenche le déploiement du commit audité par l'outil de l'hébergeur (pas de déploiement automatique sur push) → health check post-deploy automatique.
 - Si health check 🔴 → rollback automatique dans les 60 secondes.
 - Notif Vincent : "✅ Live + safe" ou "🔴 Rollback effectué, voici pourquoi".
 - Secrets (clés API, JWT_SECRET) injectés via variables d'env hosting, jamais commités.
 
-**Dépendances** : amont = Audit Tech 🟢 + QA E2E · aval = SENTINEL · skippable si projet sans déploiement (script local).
+**Dépendances** : amont = Audit Tech 🟢, ou 🟠 accepté par Vincent et tracé + QA E2E · aval = SENTINEL · skippable si projet sans déploiement (script local).
 
 **Risque sécu** : 🟠 cible potentielle (injection de clés via commit malveillant). Pre-commit hook `gitleaks` obligatoire.
 
@@ -323,6 +341,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 ---
 
 ## 13. SENTINEL
+
+Spec exécutable : [`sentinel.md`](sentinel.md)
 
 **Rôle** : Tourne en continu post-livraison. Monitor santé, alertes critiques uniquement, propose actions correctives en langage métier.
 
@@ -337,7 +357,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 **Outputs** : `canvas.feedback.sentinel_alerts[]` avec `timestamp`, `severity` (info/warning/critical), `type`, `message_metier`, `action_taken_auto`, `action_required_human`.
 
 **Comportements proactifs (mode perso)** :
-- **Petits fix routiniers sans demander** : renouvellement cert (déjà géré par Vercel), redéploiement après glitch réseau, nettoyage logs.
+- **Petits fix routiniers sans demander** (opt-in de Vincent) : renouvellement cert (déjà géré par Vercel), redéploiement après glitch réseau (via l'outil de DEPLOY et tous ses garde-fous), mise en quarantaine des vieux logs.
 - **Daily digest** à 8h00 : tout ce qui s'est passé depuis 24h, langage métier.
 - **Réveil immédiat** (notification push) uniquement pour :
   - 🔴 Fuite de données potentielle
@@ -355,6 +375,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 
 ## 14. Insight Synthesizer
 
+Spec exécutable : [`insight-synthesizer.md`](insight-synthesizer.md)
+
 **Rôle** : Croise feedback synthétique (4 personas) et feedback réel (KPIs + verbatims). Produit des insights priorisés + recommandation pivot/persévère/backlog.
 
 **Phase** : Feedback.
@@ -371,10 +393,10 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 - Priorité **haute** uniquement si confirmé par les 2 couches (synth + réel).
 - Priorité **moyenne** si confirmé par 1 couche.
 - Priorité **basse** si signal faible.
-- Comparaison KPIs observés vs cibles Metric Setter.
+- Comparaison KPIs observés vs cibles Metric Setter : calculée par l'Orchestrateur (code déterministe), l'agent la reçoit et ne peut pas la modifier.
 - En perso : personas désactivés → base uniquement sur feedback réel + Sentinel.
 
-**Dépendances** : amont = SENTINEL + personas synth · aval = checkpoint Vincent (pivot/persévère) · skippable si pas d'utilisateurs externes.
+**Dépendances** : amont = SENTINEL + personas synth + GTM (`metric_setter`, lu en lecture seule) · aval = checkpoint Vincent (pivot/persévère), puis GTM en cas de pivot, COACH si `discovery_relance`, PM si `backlog_next` · skippable si pas d'utilisateurs externes.
 
 **Risque sécu** : 🔴 **manipulation des KPIs possible** (faux verbatim utilisateur qui maquille). Golden case adversarial obligatoire.
 
@@ -384,6 +406,8 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 
 ## 15. Livrable
 
+Spec exécutable : [`livrable.md`](livrable.md)
+
 **Rôle** : Génère 6 livrables clients event-driven en double version (Exécutif + Technique) depuis le Canvas.
 
 **Phase** : Transverse.
@@ -392,7 +416,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 - Fait : Impact Map, Story Map, Roadmap Now/Next/Later, Sprint Review Deck, Rapport Audit Tech, Decision Log.
 - Ne fait pas : contenu brut (tous les autres agents), modération client (Vincent).
 
-**Inputs** : tout `canvas` (lecture seule).
+**Inputs** : la tranche du `canvas` propre au type de livrable demandé (lecture seule, choisie par l'Orchestrateur).
 
 **Outputs** : `canvas.livrables.generated[]` avec `type`, `version`, `version_exec_url` (Notion / HTML), `version_tech_url`, `format`, `trigger_event`.
 
@@ -472,6 +496,8 @@ Projet type **Express** (2 sprints) :
 ---
 
 ## 🚦 Prochaines étapes de spec exécutable
+
+> Historique : les 12 specs sont écrites, cf [`README.md`](README.md).
 
 Ordre proposé par priorité (quand tu attaques un vrai projet) :
 
