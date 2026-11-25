@@ -557,6 +557,7 @@ Prompt caching actif. Calcul : 5k entrée à 0,10 $/M + 3,5k sortie à 0,50 $/M,
 
 ## 14. Notes & questions ouvertes
 
+- [x] **Activation** : validé par Vincent le 24/11/2026, Livrable est désactivé par défaut en perso (activable à la demande) et actif en client. Report dans `policies/perso-profile.md` à faire avec Vincent (fichier protégé).
 - [ ] **Événements déclencheurs** : `light-specs.md` dit « uniquement quand un livrable est impacté » sans lister les événements. La table de la section 3 propose des noms (`gtm_validated`, `sprint_review_ready`, etc.) à confirmer dans la spec de l'Orchestrateur, avec la table événement vers types calculée de façon déterministe.
 - [ ] **Écart d'entrées** : `light-specs.md` donne « tout `canvas` » en lecture seule ; la spec réduit l'entrée à la tranche du type demandé (moindre exposition, coût plus bas). Écart volontaire à valider.
 - [ ] **Notion et désanonymisation** : la page Notion reste anonymisée (placeholders `CLIENT_A`) ; la version client réelle est un export local désanonymisé par script. Faut-il autoriser un jour une page Notion désanonymisée (les vrais noms iraient alors chez Notion) ? Reco : non sans décision explicite de Vincent et DPA Notion.

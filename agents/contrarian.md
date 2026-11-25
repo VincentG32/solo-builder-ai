@@ -4,7 +4,7 @@
 > **Phase** : Discovery (actif en modes Standard et Complet, skippable en Express)
 > **Statut spec** : 🟢 Spec exécutable
 > **Owner** : Vincent · **Dernière MAJ** : 2026-11-24
-> **Modèle LLM par défaut** : Claude Opus 5.5 (`claude-opus-5-5`), en perso comme en client (agent critique : une faille non vue ici coûte cher plus loin)
+> **Modèle LLM par défaut** : Claude Opus 5.5 (`claude-opus-5-5`), en perso ; Claude Fable 5.2 (`claude-fable-5-2`) sur un projet client (décision du 24/11/2026, cf [`light-specs.md`](light-specs.md#-répartition-des-modèles)). Agent critique : une faille non vue ici coûte cher plus loin
 > **Niveau de classification max accepté** : 🟡 Interne (cf [`policies/data-classification.md`](../policies/data-classification.md), tableau « Conséquences sur le pipeline »)
 > **Activable en mode** : perso ✅ · client ✅ (uniquement sur brief anonymisé, jamais sur donnée 🟠 ou 🔴)
 > **Prompt version active** : v1.0

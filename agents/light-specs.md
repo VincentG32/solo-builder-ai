@@ -36,14 +36,15 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 | **Opus 5.5** | `claude-opus-5-5` | 4 $ / 20 $ | Coach, CONTRARIAN, JUDGE, Dev, Insight Synthesizer |
 | **Sonnet 5.5** | `claude-sonnet-5-5` | 2 $ / 10 $ | EMBER+RAZOR, GTM, TECH-ADVISOR, PM, QA E2E |
 | **Haiku 5.5** | `claude-haiku-5-5` | 0,10 $ / 0,50 $ (requêtes jusqu'à 100k tokens) | Audit Tech (synthèse), DEPLOY, SENTINEL, Livrable |
-| **Fable 5.1** | `claude-fable-5-1` | 10 $ / 50 $ | Aucun par défaut. Uniquement sur demande explicite de Vincent, pour un cas rare et lourd (ex : Discovery Complète à fort enjeu) |
+| **Fable 5.2** | `claude-fable-5-2` | 8 $ / 40 $ | Aucun par défaut. Trois cas validés par Vincent (24/11/2026) : escalade après 2 échecs d'Opus 5.5 sur une même tâche ; relecture de sécurité finale d'une livraison qui contient du code ; CONTRARIAN, JUDGE et Discovery Complète sur un projet client. Sinon, uniquement sur demande explicite de Vincent |
 | **Ollama local** | non applicable | Gratuit après matériel | Anonymisation et toute donnée 🟠 Sensible |
 
 **Logique** :
 - **Opus 5.5** pour les agents qui décident, ou dont une erreur serait coûteuse et invisible pour un non-développeur (Dev : le code n'est pas relu par Vincent).
 - **Sonnet 5.5** pour la production courante, toujours suivie d'un checkpoint humain.
 - **Haiku 5.5** pour la synthèse courte, le reformatage et la surveillance de routine.
-- **Répartition identique** en mode perso et en mode client.
+- **Fable 5.2** en renfort ponctuel, jamais pour la production courante (deux fois le prix d'Opus 5.5) : seulement dans les trois cas du tableau, là où une erreur coûte cher et passe inaperçue pour un non-développeur.
+- **Répartition identique** en mode perso et en mode client, sauf CONTRARIAN, JUDGE et la Discovery Complète, qui passent en Fable 5.2 sur un projet client.
 - **Aucun modèle Claude ne reçoit de donnée avant l'anonymisation**, qui est 100 % locale.
 
 > Note pour l'implémentation : sur ces modèles, le raisonnement interne est toujours actif et facturé comme des tokens de sortie, et certains paramètres d'appel ont changé. À intégrer au moment de coder.

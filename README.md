@@ -9,7 +9,7 @@
 
 Je suis Scrum Master / Delivery Manager freelance avec un profil produit **pas développeur**.
 
-Mon objectif : prendre en charge des projets de bout en bout — du challenge de l'idée jusqu'à la livraison et au feedback — sans recruter ni sous-traiter à chaque étape.
+Mon objectif : prendre en charge des projets de bout en bout (du challenge de l'idée jusqu'à la livraison et au feedback) sans recruter ni sous-traiter à chaque étape.
 
 Le système d'agents IA est l'outil qui rend ça possible :
 
@@ -81,27 +81,27 @@ flowchart TD
 
 > Avant de coder quoi que ce soit, le système challenge l'idée avec des preuves réelles. EMBER pitche, RAZOR tue, CONTRARIAN cherche les angles morts, JUDGE tranche.
 
-### Agent EMBER+RAZOR — Builder ET Destroyer
+### Agent EMBER+RAZOR : Builder ET Destroyer
 Pitch l'idée sous son meilleur jour, puis la challenge immédiatement avec des preuves contraires. **Mode débat interne** dans un seul agent (économie de tokens, tension préservée).
 
-**Sources** : Web search (Reddit · HN · G2 · Product Hunt · Crunchbase · Failory) + **Data.gouv** (INSEE, marchés sectoriels FR, données entreprises — source non biaisée, essentielle en contexte français).
+**Sources** : Web search (Reddit · HN · G2 · Product Hunt · Crunchbase · Failory) + **Data.gouv** (INSEE, marchés sectoriels FR, données entreprises, source non biaisée, essentielle en contexte français).
 
 **Output** : Pitch + preuves terrain + red flags + concurrents morts.
 
 ### Agent CONTRARIAN
-Attaque les **assumptions cachées** — ce que je ne questionne pas car je le crois évident.
+Attaque les **assumptions cachées** : ce que je ne questionne pas car je le crois évident.
 
 - RAZOR cherche des preuves externes (concurrents, marché)
 - CONTRARIAN cherche les angles morts internes (logique du modèle, dépendances implicites, risques légaux/opérationnels)
 
-**Exemple type** : "Ton modèle économique est-il légalement compatible avec ton statut juridique ?" — évident pour un juriste, invisible quand on est focalisé produit.
+**Exemple type** : "Ton modèle économique est-il légalement compatible avec ton statut juridique ?" : évident pour un juriste, invisible quand on est focalisé produit.
 
-### Agent JUDGE — Gates binaires
+### Agent JUDGE : Gates binaires
 Verdict **Go / No-Go strict**, binaire, non charmable. Inspiration : pattern Mycelium (theory gates). Chaque gate : la preuve existe ou n'existe pas. Pas de "on espère que".
 
 **Output** : Go/No-Go + Canvas YAML v1 généré.
 
-### ✋ Checkpoint — Go/No-Go
+### ✋ Checkpoint : Go/No-Go
 Je lis le rapport complet, je valide ou je demande un pivot d'orientation avant GTM.
 
 ---
@@ -110,7 +110,7 @@ Je lis le rapport complet, je valide ou je demande un pivot d'orientation avant 
 
 > Pourquoi GTM avant Delivery ? Pour éviter de construire le bon produit pour la mauvaise audience, via le mauvais canal, au mauvais prix. C'est aussi là que se décide le périmètre MVP.
 
-### Agent GTM — 3 modes séquentiels (1 seul agent)
+### Agent GTM : 3 modes séquentiels (1 seul agent)
 
 ```mermaid
 flowchart LR
@@ -128,11 +128,11 @@ flowchart LR
 |---|---|
 | **1. Stratégie** | Segment cible · canal d'acquisition · positionnement · prix · timing |
 | **2. MVP Scoper** | **Must** (sprint 1) · **Should** (sprint 2-3) · **Later** (après validation) |
-| **3. Metric Setter** | KPIs par incrément · critères de **pivot** · critères de **persévère** — définis **avant** livraison |
+| **3. Metric Setter** | KPIs par incrément · critères de **pivot** · critères de **persévère**, définis **avant** livraison |
 
-> 💡 Les critères pivot/persévère sont définis **avant** de livrer — pas après. Ça évite le biais de confirmation ("on garde parce qu'on a construit"). Les métriques tranchent objectivement.
+> 💡 Les critères pivot/persévère sont définis **avant** de livrer, pas après. Ça évite le biais de confirmation ("on garde parce qu'on a construit"). Les métriques tranchent objectivement.
 
-### ✋ Checkpoint — Validation stratégie + scope MVP
+### ✋ Checkpoint : Validation stratégie + scope MVP
 Dernier checkpoint avant que l'Agent PM commence à générer des stories.
 
 ---
@@ -144,16 +144,16 @@ Dernier checkpoint avant que l'Agent PM commence à générer des stories.
 ### Agent PM
 **Input** : Canvas YAML + scope MVP. **Output** : Backlog priorisé · user stories au format **BDD/Gherkin** · critères d'acceptance.
 
-> 💡 BDD = pont entre le PM/PO et le dev. Les scénarios *Étant donné / Quand / Alors* sont en langage naturel — je les valide sans lire du code. Ces mêmes scénarios deviennent les tests d'intégration de l'Agent Dev. Un document source, deux usages.
+> 💡 BDD = pont entre le PM/PO et le dev. Les scénarios *Étant donné / Quand / Alors* sont en langage naturel : je les valide sans lire du code. Ces mêmes scénarios deviennent les tests d'intégration de l'Agent Dev. Un document source, deux usages.
 
-### ✋ Checkpoint — Validation specs + priorisation
+### ✋ Checkpoint : Validation specs + priorisation
 Mon checkpoint le plus important en Delivery. Je valide les stories, je vérifie que le Must est bien le MVP, j'ajuste les priorités.
 
 ### Agent Dev
 Produit le code, l'architecture, le schéma de base de données.
 **Règle clé** : il génère **ses propres** tests unitaires et d'intégration en même temps qu'il code. Pas d'agent QA séparé pour ça.
 
-### Agent Audit Tech — 100% automatique
+### Agent Audit Tech : 100% automatique
 **Outils CLI** (quasi zéro tokens LLM) :
 
 | Outil | Vérifie |
@@ -167,21 +167,21 @@ Produit le code, l'architecture, le schéma de base de données.
 - 🟠 **Orange** → remonte à moi pour décision
 - 🟢 **Vert** → pipeline continue
 
-### ✋ Checkpoint — Rapport audit
+### ✋ Checkpoint : Rapport audit
 Je lis le rapport (feux R/O/V). Les rouges sont déjà bloqués. Je décide sur les oranges.
 
-### Agent QA E2E — Playwright
+### Agent QA E2E : Playwright
 **Règle absolue** : 3-5 parcours critiques **maximum**. Login/auth · parcours principal · 2-3 cas limites critiques.
 **Output** : Screenshots + vidéos de chaque parcours.
 
 > 💡 La règle 3-5 est non-négociable. (1) Coût : un E2E complet = 20-50k tokens et 5-15 min par run. (2) Fragilité : casse dès qu'un élément UI change de place. On couvre ce qui ne change pas souvent et représente la valeur core.
 
-### ✋ Checkpoint — Recette finale PO
-Je regarde screenshots et vidéos. Je valide. **Zéro code à lire** — c'est le principe.
+### ✋ Checkpoint : Recette finale PO
+Je regarde screenshots et vidéos. Je valide. **Zéro code à lire** : c'est le principe.
 
 ---
 
-## 🔁 Boucle de feedback — 2 couches
+## 🔁 Boucle de feedback : 2 couches
 
 ```mermaid
 flowchart LR
@@ -199,7 +199,7 @@ flowchart LR
     style E fill:#fff4e1
 ```
 
-### Couche 1 — Synthétique (avant livraison)
+### Couche 1 : Synthétique (avant livraison)
 4 agents personas ancrés contexte IT/PME français :
 
 | Persona | Profil | Ce qu'il challenge | Signal d'alerte |
@@ -209,13 +209,13 @@ flowchart LR
 | **Dev senior sceptique** | Challenge tout, déteste le sur-engineering | Qualité code, dette technique, scalabilité | Choix techniques non justifiés |
 | **Utilisateur final pressé** | Adopte si intuitif en 2 min, abandonne sinon | UX, onboarding, friction parcours | Parcours principal > 3 étapes |
 
-### Couche 2 — Réel (après livraison)
+### Couche 2 : Réel (après livraison)
 KPIs définis par le Metric Setter : **activation** (% qui complètent le parcours principal) · **rétention** (J+7) · **time-to-value** · NPS / verbatims qualitatifs.
 
 ### Agent Insight Synthesizer
 Croise synth + réel. **Prioritise ce qui est confirmé par les deux sources**. Propose le niveau de remontée.
 
-### ✋ Checkpoint — Décision pivot/persévère
+### ✋ Checkpoint : Décision pivot/persévère
 - **Backlog sprint +1** : ajustement mineur, on continue
 - **GTM revisité** : la cible ou le canal est à revoir
 - **Discovery relancée** : une hypothèse de fond était fausse
@@ -224,14 +224,14 @@ Croise synth + réel. **Prioritise ce qui est confirmé par les deux sources**. 
 
 ---
 
-## 📄 Agent Livrable — 6 livrables event-driven
+## 📄 Agent Livrable : 6 livrables event-driven
 
-> L'Agent PM gère les specs internes. L'Agent Livrable gère les documents clients — audience différente, langage différent, format différent.
+> L'Agent PM gère les specs internes. L'Agent Livrable gère les documents clients : audience différente, langage différent, format différent.
 
 ### Principe : double version systématique
 Chaque livrable existe en deux formats depuis la même source (Canvas YAML) :
-- **Version Exécutif** — 1 page, langage métier, lisible sans contexte technique
-- **Version Technique** — détaillée, jargon IT, pour DSI et équipes dev
+- **Version Exécutif** : 1 page, langage métier, lisible sans contexte technique
+- **Version Technique** : détaillée, jargon IT, pour DSI et équipes dev
 
 ### Déclenchement event-driven
 L'agent écoute les événements système et se déclenche uniquement quand un livrable est impacté.
@@ -251,7 +251,7 @@ L'agent écoute les événements système et se déclenche uniquement quand un l
 
 ---
 
-## 🧪 QA — Architecture 3 couches
+## 🧪 QA : Architecture 3 couches
 
 ```mermaid
 flowchart TD
@@ -271,15 +271,15 @@ flowchart TD
 |---|---|---|
 | Unitaires (dans Dev) | Quasi nul | Très rapide |
 | Intégration BDD (dans Dev) | Moyen | Moyenne |
-| E2E (Agent QA dédié) | Élevé | Lente — limité aux parcours critiques |
+| E2E (Agent QA dédié) | Élevé | Lente : limité aux parcours critiques |
 
 > 💡 80/20 appliqué à la QA. 3 niveaux de risque à des coûts très différents.
 
 ---
 
-## 🧠 Canvas YAML — Mémoire centrale
+## 🧠 Canvas YAML : Mémoire centrale
 
-Fichier unique versionné dans GitHub. Contient **tout** — contexte projet, décisions, outputs de chaque phase, profil destinataires livrables, métriques de succès.
+Fichier unique versionné dans GitHub. Contient **tout** : contexte projet, décisions, outputs de chaque phase, profil destinataires livrables, métriques de succès.
 
 **Règle de gouvernance** :
 - ✅ **Un seul écrivain** : LangGraph Orchestrateur
@@ -296,7 +296,7 @@ L'Agent Livrable s'en sert comme source unique pour générer tous les documents
 
 | Composant | Usage | Coût |
 |---|---|---|
-| **Claude Max** | Moteur principal — Discovery, challenge, specs, livrables | ~90€/mois |
+| **Claude Max** | Moteur principal : Discovery, challenge, specs, livrables | ~90€/mois |
 | **CrewAI** | Framework rôles agents | Gratuit (open source) |
 | **LangGraph** | Orchestration + checkpoints human-in-loop | Gratuit (open source) |
 | **Playwright** | Tests E2E browser automation | Gratuit (open source) |
@@ -321,16 +321,16 @@ L'Agent Livrable s'en sert comme source unique pour générer tous les documents
 
 | # | Agent | Phase | Rôle en une ligne |
 |---|---|---|---|
-| 1 | **EMBER+RAZOR** | Discovery | Builder ET Destroyer — débat interne avec preuves réelles |
+| 1 | **EMBER+RAZOR** | Discovery | Builder ET Destroyer : débat interne avec preuves réelles |
 | 2 | **CONTRARIAN** | Discovery | Attaque les assumptions cachées |
-| 3 | **JUDGE** | Discovery | Go/No-Go binaire — bloque sans preuves |
+| 3 | **JUDGE** | Discovery | Go/No-Go binaire : bloque sans preuves |
 | 4 | **Agent GTM** | GTM | Stratégie + MVP Scoper + Metric Setter (3 modes) |
 | 5 | **Agent PM** | Delivery | Stories BDD + tickets priorisés |
 | 6 | **Agent Dev** | Delivery | Code + archi + tests unit/intégration |
-| 7 | **Agent Audit Tech** | Delivery | Sécu + perf CLI — 100% auto — bloquant si rouge |
-| 8 | **Agent QA E2E** | Delivery | Playwright 3-5 parcours — screenshots + vidéos |
+| 7 | **Agent Audit Tech** | Delivery | Sécu + perf CLI · 100% auto · bloquant si rouge |
+| 8 | **Agent QA E2E** | Delivery | Playwright 3-5 parcours · screenshots + vidéos |
 | 9 | **Insight Synthesizer** | Feedback | Croise synth + réel → insights actionnables |
-| 10 | **Agent Livrable** | Transverse | 6 livrables clients event-driven — Notion + HTML |
+| 10 | **Agent Livrable** | Transverse | 6 livrables clients event-driven · Notion + HTML |
 
 > **8 agents actifs en régime de croisière.** Agent Dev absorbe QA unit/intégration. Agent GTM fusionne 3 rôles. Objectif : éviter la prolifération qui complexifie la maintenance.
 
@@ -356,40 +356,50 @@ L'Agent Livrable s'en sert comme source unique pour générer tous les documents
 
 | Niveau | Approche |
 |---|---|
-| **Démarrage / PME / projets internes** | Anonymiser les briefs avant injection (`CLIENT_A`, données financières arrondies) — suffisant pour 95% des cas |
+| **Démarrage / PME / projets internes** | Anonymiser les briefs avant injection (`CLIENT_A`, données financières arrondies), suffisant pour 95% des cas |
 | **Grand compte / RGPD strict** | Claude for Enterprise ou anonymisation systématique renforcée |
 | ❌ **À ne jamais injecter** | Données personnelles identifiables · secrets industriels non anonymisés · mots de passe · clés API |
+
+---
+
+## 🌙 Mode autopilote
+
+Le système peut avancer **sans moi devant l'écran**. Une session Claude Code dans le cloud travaille seule, souvent la nuit, sous un compte GitHub dédié, et dépose son travail sous forme de demandes de fusion. Les garde-fous :
+
+- **Rien n'arrive sur `main` sans mon approbation** : c'est GitHub qui bloque, pas la discipline de l'agent.
+- **Rien n'est mis en ligne**, aucun message n'est envoyé, rien n'est supprimé.
+- **Données de test seulement.**
+- **Un comité qui construit et un comité qui conteste**, séparés, et un feu 🟢 🟠 🔴 par fonctionnalité. La sécurité, l'argent, les suppressions et les messages sont toujours 🔴 : ils attendent ma décision.
+- **Un bilan écrit au réveil** : je relis et je décide de ce qui est fusionné.
+
+Les consignes de l'agent sont dans [`AUTOPILOTE.md`](AUTOPILOTE.md). Premier run, dans la nuit du 23 au 24/11/2026 : 13 demandes de fusion, aucune alerte rouge, et deux brouillons qui assouplissaient une règle de sécurité ont été corrigés par le relecteur avant de m'arriver.
 
 ---
 
 ## 🚀 Statut & prochaine étape
 
 **Conception** : ✅ Terminée
-**Construction des agents** : 🔄 En cours
-
-### MVP du système — 4 agents prioritaires (80% de la valeur)
+**Specs des agents** : ✅ 14 specs exécutables dans [`agents/`](agents/), dont 12 rédigées en une nuit par le mode autopilote (24/11/2026), puis relues et validées
+**Prochaine étape** : une architecture modulaire (un socle commun, des briques réutilisables, des chaînes qui les enchaînent), puis un exemple exécutable avec CrewAI et LangGraph
 
 ```mermaid
 flowchart LR
-    A[1. EMBER+RAZOR<br/>+CONTRARIAN] --> B[2. Agent PM]
-    B --> C[3. Agent Audit Tech]
-    C --> D[4. Insight Synthesizer]
+    A[Conception] --> B[14 specs exécutables]
+    B --> C[Architecture modulaire]
+    C --> D[Exemple CrewAI + LangGraph]
 
-    style A fill:#ffe1e1
-    style B fill:#fff4e1
-    style C fill:#e1ffe1
+    style A fill:#e1ffe1
+    style B fill:#e1ffe1
+    style C fill:#fff4e1
     style D fill:#e1e1ff
 ```
-
-Une fois ces 4 agents validés, enrichissement dans cet ordre :
-**Agent GTM → Agent QA E2E → Agent Livrable → Boucle feedback complète**
 
 ---
 
 ## 📚 Historique des versions
 
 <details>
-<summary><strong>V1 — Système initial</strong> (référence historique)</summary>
+<summary><strong>V1 : Système initial</strong> (référence historique)</summary>
 
 > Pipeline linéaire Discovery → Delivery. Pas de GTM, pas de MVP, pas de boucle feedback. Sert de référence pour comprendre l'évolution vers la V2.
 
@@ -399,11 +409,11 @@ Une fois ces 4 agents validés, enrichissement dans cet ordre :
 - Séparation nette des responsabilités entre agents
 
 **Ce qui manquait (résolu en V2)** :
-1. **Pas de GTM** — on validait l'idée mais pas comment la lancer
-2. **Pas de MVP** — on livrait "le produit" entier, pas un incrément utile
-3. **Pipeline linéaire** — pas de boucle, pas d'apprentissage post-livraison
-4. **Pas de livrables clients** — code et specs internes uniquement
-5. **Pas de feedback loop** — une fois livré, le système s'arrêtait
+1. **Pas de GTM** : on validait l'idée mais pas comment la lancer
+2. **Pas de MVP** : on livrait "le produit" entier, pas un incrément utile
+3. **Pipeline linéaire** : pas de boucle, pas d'apprentissage post-livraison
+4. **Pas de livrables clients** : code et specs internes uniquement
+5. **Pas de feedback loop** : une fois livré, le système s'arrêtait
 
 **Différences clés V1 → V2** :
 - EMBER et RAZOR séparés → fusionnés en **EMBER+RAZOR** (débat interne, économie de tokens)
