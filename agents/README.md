@@ -1,4 +1,4 @@
-# 🤖 Agents — Index
+# 🤖 Agents : Index
 
 > **Statut** : V3 du système. 14 agents, tous en spec exécutable (cohérence croisée vérifiée le 2026-11-24).
 
@@ -56,12 +56,12 @@ flowchart TD
 
 > Historique : les 14 specs sont désormais écrites.
 
-Cf [`policies/perso-profile.md`](../policies/perso-profile.md) — les 4 agents prioritaires pour livrer un MVP système fonctionnel rapidement :
+Cf [`policies/perso-profile.md`](../policies/perso-profile.md) : les 4 agents prioritaires pour livrer un MVP système fonctionnel rapidement :
 
-1. **COACH** — routeur Discovery, point d'entrée du système
-2. **TECH-ADVISOR** — clarté sur la stack avant Delivery
-3. **CONTRARIAN + JUDGE** — minimum viable pour mode Standard
-4. **PM** — pour démarrer Delivery même sans Dev
+1. **COACH** : routeur Discovery, point d'entrée du système
+2. **TECH-ADVISOR** : clarté sur la stack avant Delivery
+3. **CONTRARIAN + JUDGE** : minimum viable pour mode Standard
+4. **PM** : pour démarrer Delivery même sans Dev
 
 Les autres viennent après, ordre indicatif :
 **EMBER+RAZOR → GTM → Audit Tech élargi → QA E2E → DEPLOY → SENTINEL → Insight Synthesizer → Livrable → Dev**
@@ -70,7 +70,7 @@ Les autres viennent après, ordre indicatif :
 
 ## 📐 Template à utiliser
 
-Tous les agents respectent [`_TEMPLATE.md`](_TEMPLATE.md) — 14 sections obligatoires, prompt versioning inline, golden cases avec critères Python testables, section Sécurité par agent.
+Tous les agents respectent [`_TEMPLATE.md`](_TEMPLATE.md) : 14 sections obligatoires, prompt versioning inline, golden cases avec critères Python testables, section Sécurité par agent.
 
 ## 🟡 Cadrages légers
 
@@ -80,11 +80,11 @@ Vue d'ensemble pour la cohérence du système (rôles, modèles, coûts) : [`lig
 
 ## 🔐 Agents critiques (tests adversariaux obligatoires)
 
-Ces agents prennent des décisions structurantes — tests adversariaux non négociables :
+Ces agents prennent des décisions structurantes : tests adversariaux non négociables :
 
-- **COACH** (point d'entrée — injection probable dès le brief)
-- **EMBER+RAZOR** (web search — sources externes hostiles potentielles)
+- **COACH** (point d'entrée : injection probable dès le brief)
+- **EMBER+RAZOR** (web search : sources externes hostiles potentielles)
 - **CONTRARIAN** (pourrait être manipulé pour "rester positif")
-- **JUDGE** (verdict Go/No-Go — cible naturelle)
+- **JUDGE** (verdict Go/No-Go : cible naturelle)
 - **Audit Tech** (peut être contourné par commentaires dans le code)
-- **Insight Synthesizer** (croise feedback — manipulation des KPIs possible)
+- **Insight Synthesizer** (croise feedback : manipulation des KPIs possible)

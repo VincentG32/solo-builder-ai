@@ -91,9 +91,8 @@ flowchart TD
 | **Branche de travail qui se déploie ou lit des secrets** | Code d'agent, pas encore validé, qui tourne avec des clés ou part en ligne dès son envoi | Règle des branches ci-dessous |
 
 **Règle des branches de travail (décision du 24/11/2026)** :
-- **Jamais de déploiement automatique en production.** La production n'est déployée qu'après une fusion sur `main` validée par Vincent.
-  - **Produit client** : non négociable, en aucune circonstance.
-  - **Produit perso** (par exemple le site de Vincent) : interdit aujourd'hui ; pourra être reconsidéré plus tard, uniquement sur décision explicite de Vincent.
+- **Non négociable, en aucune circonstance, pour tout produit (client comme perso) : jamais de déploiement automatique sur l'environnement de production.** La production n'est déployée qu'après une fusion sur `main` validée par Vincent.
+- **Environnements hors production** (préversion, préproduction) : un déploiement automatique pourra être accepté plus tard, sur décision de Vincent (phase 2 ci-dessous).
 - Une branche de travail n'a **jamais** accès aux secrets de production.
 - **Phase 1 (actuelle)** : une branche de travail ne déclenche ni intégration continue avec secrets, ni déploiement.
 - **Phase 2 (sur décision de Vincent)** : une branche de travail pourra déployer une préversion ou une préproduction **protégée par une connexion**, avec données de test et clés de test uniquement, pour que Vincent la regarde le matin. Les conditions sont prêtes dans la procédure de l'autopilote.

@@ -137,7 +137,7 @@ Les 5-7 questions du Coach mesurent :
 | **Decision Log** | Exhaustif | Essentiel uniquement (forçages + pivots) | Moins de poids |
 | **Agent Livrable (6 docs clients)** | Actif par défaut | Désactivé par défaut, activable à la demande (décision du 24/11/2026) | Personne à informer |
 | **Checkpoints humains non-techniques** | Tous bloquants | Skippables avec flag explicite (pour Discovery Express) | Fluidité |
-| **Mise en prod** | Selon contrat client, toujours après validation | **Jamais automatique aujourd'hui** : après ta validation uniquement (décision du 24/11/2026). Pourra être reconsidéré plus tard pour un produit perso, sur ta décision explicite ; en client, jamais | Aucun déploiement automatique en production |
+| **Mise en prod** | Selon contrat client, toujours après validation | **Jamais automatique, en aucune circonstance** : après ta validation uniquement (non négociable, décision du 26/11/2026). Seuls les environnements hors production (préversion, préproduction) pourront plus tard recevoir un déploiement automatique, sur ta décision | Aucun déploiement automatique en production |
 | **Sentinelle post-prod** | Selon contrat client | **Active par défaut** | Tu ne sauras pas debug seul |
 | **Coût total cible** | 100-200€/projet selon ampleur | 5-30€/projet (mode Express courant) | Marge perso |
 
