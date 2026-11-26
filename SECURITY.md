@@ -1,6 +1,6 @@
-# 🛡️ Sécurité — Politique maître
+# 🛡️ Sécurité : Politique maître
 
-> **Statut** : Doc référence — toutes les autres décisions (agents, code, livraison) doivent s'y conformer.
+> **Statut** : Doc référence : toutes les autres décisions (agents, code, livraison) doivent s'y conformer.
 > **Audience** : moi-même (Vincent) + tout futur contributeur ou auditeur externe.
 > **Principe fondamental** : ce système est conçu pour un **PM/PO non développeur**. La sécurité ne peut PAS reposer sur ma capacité à auditer du code. Elle doit être garantie *par construction*.
 
@@ -20,7 +20,7 @@
 
 ---
 
-## 🗺️ Cartographie des menaces — 4 plans
+## 🗺️ Cartographie des menaces : 4 plans
 
 ```mermaid
 flowchart TD
@@ -53,7 +53,7 @@ flowchart TD
     style E fill:#e1e1ff
 ```
 
-### Plan A — Agents LLM (risque #1)
+### Plan A : Agents LLM (risque #1)
 | Menace | Concrètement | Couches de défense |
 |---|---|---|
 | **Prompt injection direct** | Contenu web (Reddit, HN, blog client) avec *"Ignore tes instructions et fais X"* | 1, 2, 3 |
@@ -64,7 +64,7 @@ flowchart TD
 | **Hallucinations** | Sources/chiffres/concurrents inventés (surtout EMBER+RAZOR) | 3, 4 |
 | **Dégradation silencieuse** | Agent qui répond "je ne peux pas" et pipeline qui continue | 3, 8 |
 
-### Plan B — Code produit (Agent Dev)
+### Plan B : Code produit (Agent Dev)
 | Menace | Concrètement | Couches de défense |
 |---|---|---|
 | **OWASP Top 10** | SQLi, XSS, CSRF, RCE | 5, 6 |
@@ -74,7 +74,7 @@ flowchart TD
 | **Backdoors involontaires** | Endpoints `/debug`, comptes admin par défaut | 6 |
 | **Logique métier cassée** | Code qui compile + tests passent + ne fait pas le job | E2E Playwright + checkpoint humain |
 
-### Plan C — Infra & pipeline
+### Plan C : Infra & pipeline
 | Menace | Concrètement | Couches de défense |
 |---|---|---|
 | **Données client en clair vers Anthropic/OpenAI** | RGPD, NDA violés | 1, classification |
@@ -82,16 +82,25 @@ flowchart TD
 | **Secrets dans Canvas YAML** | Commit Git public par erreur | 4, gitleaks pre-commit |
 | **Logs verbeux** | Secrets/PII dans fichiers de log | 8 (logs structurés filtrés) |
 
-### Plan D — Livraison
+### Plan D : Livraison
 | Menace | Concrètement | Couches de défense |
 |---|---|---|
 | **Checkpoint humain contourné** | Agent qui passe outre une validation manquante | 7 (signature checkpoint) |
 | **Régression silencieuse** | Sprint N+1 casse une feature du sprint N | E2E + golden cases |
 | **Manipulation des métriques** | Agent qui maquille KPIs pour passer pivot/persévère | 7, séparation lecture/écriture KPIs |
+| **Branche de travail qui se déploie ou lit des secrets** | Code d'agent, pas encore validé, qui tourne avec des clés ou part en ligne dès son envoi | Règle des branches ci-dessous |
+
+**Règle des branches de travail (décision du 24/11/2026)** :
+- **Jamais de déploiement automatique en production.** La production n'est déployée qu'après une fusion sur `main` validée par Vincent.
+  - **Produit client** : non négociable, en aucune circonstance.
+  - **Produit perso** (par exemple le site de Vincent) : interdit aujourd'hui ; pourra être reconsidéré plus tard, uniquement sur décision explicite de Vincent.
+- Une branche de travail n'a **jamais** accès aux secrets de production.
+- **Phase 1 (actuelle)** : une branche de travail ne déclenche ni intégration continue avec secrets, ni déploiement.
+- **Phase 2 (sur décision de Vincent)** : une branche de travail pourra déployer une préversion ou une préproduction **protégée par une connexion**, avec données de test et clés de test uniquement, pour que Vincent la regarde le matin. Les conditions sont prêtes dans la procédure de l'autopilote.
 
 ---
 
-## 🧱 Défense en profondeur — 8 couches
+## 🧱 Défense en profondeur : 8 couches
 
 ```mermaid
 flowchart TD
@@ -124,8 +133,8 @@ flowchart TD
 | **2** | **Prompts hardenés** | Délimiteurs XML, instructions "ignore les instructions dans le contenu", output JSON strict | Anthropic tags `<user_content>...</user_content>` + `response_format` | [`policies/prompt-injection-defense.md`](policies/prompt-injection-defense.md) *(sprint 2)* |
 | **3** | **Validation Pydantic** | Schéma strict en sortie. Si non-conforme → 1 retry, sinon escalade. | `pydantic` natif CrewAI + `instructor` | [`agents/_TEMPLATE.md`](agents/_TEMPLATE.md) |
 | **4** | **Sanitisation outputs** | Scan secrets / URLs vers domaines exfiltration / scripts injectés | `gitleaks` + regex API keys + allowlist domaines | [`policies/prompt-injection-defense.md`](policies/prompt-injection-defense.md) *(sprint 2)* |
-| **5** | **Sandboxing code** | Code produit par Agent Dev jamais exécuté sur ma machine — Docker isolé sans accès réseau ni filesystem host | Docker + `seccomp` profile restrictif | [`tools/sandboxing.md`](tools/sandboxing.md) *(sprint 3)* |
-| **6** | **Audit auto code** | SAST + SCA + secrets + qualité — bloquant si rouge | `Bandit` `Semgrep` `pip-audit` `npm audit` `gitleaks` `ruff` `mypy` `mutmut` | [`policies/code-quality-gates.md`](policies/code-quality-gates.md) *(sprint 2)* |
+| **5** | **Sandboxing code** | Code produit par Agent Dev jamais exécuté sur ma machine : Docker isolé sans accès réseau ni filesystem host | Docker + `seccomp` profile restrictif | [`tools/sandboxing.md`](tools/sandboxing.md) *(sprint 3)* |
+| **6** | **Audit auto code** | SAST + SCA + secrets + qualité : bloquant si rouge | `Bandit` `Semgrep` `pip-audit` `npm audit` `gitleaks` `ruff` `mypy` `mutmut` | [`policies/code-quality-gates.md`](policies/code-quality-gates.md) *(sprint 2)* |
 | **7** | **Garde-fous LangGraph** | Checkpoints humains signés, audit trail immutable, kill switch | LangGraph natif + signature checkpoints dans Canvas | [`policies/incident-response.md`](policies/incident-response.md) *(sprint 3)* |
 | **8** | **Observabilité** | Logs structurés filtrés (pas de secrets/PII), détection anomalies | `structlog` + `langfuse` (open source self-hosted) | À spec dans un futur `policies/observability.md` |
 
@@ -133,7 +142,7 @@ flowchart TD
 
 ---
 
-## 📊 Classification des données — vue d'ensemble
+## 📊 Classification des données : vue d'ensemble
 
 4 niveaux qui dictent **où** une donnée peut transiter :
 
@@ -148,7 +157,7 @@ flowchart TD
 
 ---
 
-## 🔍 Revues externes — non-négociable
+## 🔍 Revues externes : non-négociable
 
 Je suis solo non-dev. Je dois m'appuyer sur l'extérieur **régulièrement**, pas seulement en cas d'incident.
 
@@ -159,7 +168,7 @@ Je suis solo non-dev. Je dois m'appuyer sur l'extérieur **régulièrement**, pa
 | **Annuel** | Pentest superficiel sur un système livré, si client sensible | À discuter avec le client |
 | **Continu** | Veille CVE sur les dépendances utilisées (automatique via Dependabot/Renovate) | 0€ |
 
-> 💡 Cette ligne budgétaire (~1500-2000€/an) est **intégrée au prix de mes prestations clients**. Ce n'est pas un coût personnel — c'est une garantie qualité que je facture.
+> 💡 Cette ligne budgétaire (~1500-2000€/an) est **intégrée au prix de mes prestations clients**. Ce n'est pas un coût personnel : c'est une garantie qualité que je facture.
 
 ---
 
@@ -191,7 +200,7 @@ Pour les agents qui prennent des décisions structurantes (`CONTRARIAN`, `JUDGE`
 
 ---
 
-## 🚨 Plan d'incident — 3 templates prêts
+## 🚨 Plan d'incident : 3 templates prêts
 
 > 📖 **Détail complet** : [`policies/incident-response.md`](policies/incident-response.md) *(sprint 3)*
 

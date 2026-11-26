@@ -1,6 +1,6 @@
-# 👤 Profil `perso` — Politique d'usage personnel
+# 👤 Profil `perso` : Politique d'usage personnel
 
-> **Statut** : Sprint 3 — référence active.
+> **Statut** : Sprint 3 : référence active.
 > **Audience** : moi-même (Vincent), pour tous mes projets perso/internes (non-client).
 > **Maître** : [`SECURITY.md`](../SECURITY.md) (qui reste la baseline non négociable).
 > **Mode par défaut** : `perso` jusqu'à ce que je travaille pour un client réel.
@@ -9,7 +9,7 @@
 
 ## 🎯 Philosophie
 
-Mes projets perso ne sont **pas des jouets**. Ils ont des enjeux réels (santé, business, image, time-to-market). La différence avec un projet client n'est **pas le niveau de qualité ou de sécurité** — c'est :
+Mes projets perso ne sont **pas des jouets**. Ils ont des enjeux réels (santé, business, image, time-to-market). La différence avec un projet client n'est **pas le niveau de qualité ou de sécurité** : c'est :
 
 | Axe | Mode `client` | Mode `perso` |
 |---|---|---|
@@ -23,7 +23,7 @@ Mes projets perso ne sont **pas des jouets**. Ils ont des enjeux réels (santé,
 
 ---
 
-## 🔄 Pattern fondamental — "Système propose, je décide"
+## 🔄 Pattern fondamental : "Système propose, je décide"
 
 Partout où le système doit faire un choix structurant, il **propose** une recommandation argumentée puis **j'arbitre**. Je peux toujours :
 
@@ -65,7 +65,7 @@ Tout forçage est inscrit dans le Decision Log avec :
 
 ---
 
-## 🔍 Discovery modulaire — 3 modes
+## 🔍 Discovery modulaire : 3 modes
 
 ```mermaid
 flowchart TD
@@ -112,7 +112,7 @@ Les 5-7 questions du Coach mesurent :
 
 ---
 
-## 🧱 Profil `perso` vs profil `client` — assouplissements explicites
+## 🧱 Profil `perso` vs profil `client` : assouplissements explicites
 
 ### Ce qui reste **identique**
 
@@ -135,9 +135,9 @@ Les 5-7 questions du Coach mesurent :
 | **Revues externes** | Trimestrielles + pré-livraison | Annuelle seulement | Pas de client à protéger |
 | **RC Pro / DPA / NDA** | Obligatoires | Optionnel | Pas de tiers exposé |
 | **Decision Log** | Exhaustif | Essentiel uniquement (forçages + pivots) | Moins de poids |
-| **Agent Livrable (6 docs clients)** | Actif par défaut | Désactivable par défaut | Personne à informer |
+| **Agent Livrable (6 docs clients)** | Actif par défaut | Désactivé par défaut, activable à la demande (décision du 24/11/2026) | Personne à informer |
 | **Checkpoints humains non-techniques** | Tous bloquants | Skippables avec flag explicite (pour Discovery Express) | Fluidité |
-| **Mise en prod** | Selon contrat client | Automatique avec garde-fous | Time-to-test |
+| **Mise en prod** | Selon contrat client, toujours après validation | **Jamais automatique aujourd'hui** : après ta validation uniquement (décision du 24/11/2026). Pourra être reconsidéré plus tard pour un produit perso, sur ta décision explicite ; en client, jamais | Aucun déploiement automatique en production |
 | **Sentinelle post-prod** | Selon contrat client | **Active par défaut** | Tu ne sauras pas debug seul |
 | **Coût total cible** | 100-200€/projet selon ampleur | 5-30€/projet (mode Express courant) | Marge perso |
 
@@ -148,12 +148,12 @@ Les 5-7 questions du Coach mesurent :
 | **Coach pose les questions** | Au lieu d'analyser passivement, il interroge avant d'analyser |
 | **TECH-ADVISOR propose des options non sollicitées** | Suggère des tiers de stack même si tu n'as pas demandé |
 | **Audit Tech recommande des fixes** | Au lieu de juste signaler, propose la correction en langage métier |
-| **SENTINEL agit dans la zone safe** | Petits fix routiniers (renouvellement cert, redéploiement après glitch) sans demander |
+| **SENTINEL agit dans la zone safe** | Petits fix routiniers (remise en ligne de la dernière version saine après un incident de l'hébergeur, mise en quarantaine des logs) : chaque action est **désactivée tant que tu ne l'as pas activée, une par une** (décision du 24/11/2026) ; une fois activée, elle s'exécute sans demander |
 | **Insight Synthesizer fait des suggestions** | Ne se contente pas de croiser feedback, propose le prochain pas |
 
 ---
 
-## 💰 Optimisation tokens en mode `perso` — 5 leviers
+## 💰 Optimisation tokens en mode `perso` : 5 leviers
 
 Cumulés sur un projet Express perso : **80-90% d'économie** vs profil client strict, sans rien sacrifier en qualité/sécu.
 
@@ -175,53 +175,53 @@ Cumulés sur un projet Express perso : **80-90% d'économie** vs profil client s
 | JUDGE | ✅ en Express | Décidé par Coach |
 | Agent GTM | ✅ si projet "outil one-shot" sans cible utilisateur | Manuel |
 | TECH-ADVISOR | ✅ si stack imposée par moi | Manuel |
-| Agent PM | ❌ jamais (sauf no-code pur) | — |
-| Agent Dev | ❌ jamais (sauf no-code pur) | — |
-| Agent Audit Tech | ❌ jamais | — |
+| Agent PM | ❌ jamais (sauf no-code pur) | - |
+| Agent Dev | ❌ jamais (sauf no-code pur) | - |
+| Agent Audit Tech | ❌ jamais | - |
 | Agent QA E2E | ✅ si pas d'UI | Auto-détecté |
 | Insight Synthesizer | ✅ si pas d'utilisateurs externes | Décidé par moi en GTM |
-| Agent Livrable | ✅ par défaut en perso | Activable à la demande |
-| SENTINEL | ❌ jamais (en prod) | — |
+| Agent Livrable | ✅ désactivé par défaut en perso | Activable à la demande |
+| SENTINEL | ❌ jamais (en prod) | - |
 | DEPLOY | ✅ si pas de déploiement (script local) | Auto-détecté |
 
 ---
 
-## 📚 Catalogue de mes projets — application du profil
+## 📚 Catalogue de mes projets : application du profil
 
-### Projet 1 — Apport d'affaires (existant — `contexte/projet_apport_affaires.md`)
+### Projet 1 : Apport d'affaires (existant : `contexte/projet_apport_affaires.md`)
 
 | Item | Choix |
 |---|---|
 | Classification données | 🟠 Sensible (réseau, TJM, mention employeur) |
 | Mode Discovery | 🔴 Complet (juridique + concurrentiel + commission) |
-| Stack technique | Tier 0 no-code (Airtable + Make + Apify + Waalaxy + Yousign) — **forcée par moi** |
+| Stack technique | Tier 0 no-code (Airtable + Make + Apify + Waalaxy + Yousign) : **forcée par moi** |
 | Niveau d'autonomie système | Élevée (je connais mon domaine, peu de surprises) |
 | Sentinelle | Basique (monitoring webhooks Make + alertes Airtable) |
 | Agent Livrable | Off (pas de client à informer) |
 
-### Projet 2 — Coaching santé (existant — `contexte/projet_coaching_sante/`)
+### Projet 2 : Coaching santé (existant : `contexte/projet_coaching_sante/`)
 
 | Item | Choix |
 |---|---|
 | Classification données | 🟠 Sensible (données santé personnelles, catégorie spéciale RGPD) |
 | Mode Discovery | 🔴 Complet (RGPD santé sensible si jamais publication) |
-| Stack technique | Tier 1 HTML statique (déjà v4) — possible évolution Tier 3 si publication |
+| Stack technique | Tier 1 HTML statique (déjà v4) : possible évolution Tier 3 si publication |
 | Niveau d'autonomie système | Très élevée (single-user, pas de risque externe) |
 | Sentinelle | Aucune (app locale, pas de prod) |
 | Agent Livrable | Off |
 
-### Projet 3 — CV interactif (existant — `~/projects/cv/` déployé Vercel)
+### Projet 3 : CV interactif (existant : `~/projects/cv/` déployé Vercel)
 
 | Item | Choix |
 |---|---|
 | Classification données | 🟢 Public (déjà en ligne) |
 | Mode Discovery | 🟢 Express (idée claire, pas de concurrent à challenger) |
-| Stack technique | Tier 2 JAMstack (Astro + Vercel) — déjà en place |
+| Stack technique | Tier 2 JAMstack (Astro + Vercel) : déjà en place |
 | Niveau d'autonomie système | Élevée |
 | Sentinelle | Active (downtime alerte + monitoring SEO basique) |
 | Agent Livrable | Off |
 
-### Projet 4 — Programme d'objectifs personnels (à venir)
+### Projet 4 : Programme d'objectifs personnels (à venir)
 
 | Item | Choix |
 |---|---|
@@ -232,7 +232,7 @@ Cumulés sur un projet Express perso : **80-90% d'économie** vs profil client s
 | Sentinelle | Aucune |
 | Agent Livrable | Off |
 
-### Projet 5 — Création site web (à venir, selon ambition)
+### Projet 5 : Création site web (à venir, selon ambition)
 
 | Item | Choix possible |
 |---|---|
@@ -265,8 +265,8 @@ Pas de bascule "en place" pour éviter contamination de configuration.
 
 ## 📝 Décisions ouvertes
 
-- [ ] Doit-on activer `Agent Livrable` par défaut en mode `perso` mais en mode "léger" (1 page de récap par sprint) au lieu de off complet ?
-- [ ] Niveau de proactivité du SENTINEL en perso : où placer la barre entre "il agit" et "il demande" ?
-- [ ] Cas du **CV interactif** — on l'intègre comme **cas test rétroactif** du système (on documente ce qui aurait dû être fait via les agents) ?
+- [x] Agent Livrable en perso : désactivé par défaut, activable à la demande (décision du 24/11/2026)
+- [x] Proactivité de SENTINEL en perso : actions automatiques activées une par une par Vincent (décision du 24/11/2026)
+- [ ] Cas du **CV interactif** : on l'intègre comme **cas test rétroactif** du système (on documente ce qui aurait dû être fait via les agents) ?
 - [ ] Mise en place de prompt caching dès le sprint Canvas YAML (gain immédiat sur tout)
 - [ ] Liste des agents activés par défaut pour mode `perso` à figer dans un fichier `profiles/perso.yml` (cf prochaine étape Canvas)

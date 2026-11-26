@@ -64,7 +64,7 @@ flowchart TD
     J -->|Hypothèse fausse| B
 
     style A fill:#e1f5ff
-    style C fill:#fff4e1
+    style C fill:#e1ffe1
     style E fill:#fff4e1
     style F2 fill:#fff4e1
     style F5 fill:#fff4e1
@@ -380,13 +380,14 @@ Les consignes de l'agent sont dans [`AUTOPILOTE.md`](AUTOPILOTE.md). Premier run
 
 **Conception** : ✅ Terminée
 **Specs des agents** : ✅ 14 specs exécutables dans [`agents/`](agents/), dont 12 rédigées en une nuit par le mode autopilote (24/11/2026), puis relues et validées
-**Prochaine étape** : une architecture modulaire (un socle commun, des briques réutilisables, des chaînes qui les enchaînent), puis un exemple exécutable avec CrewAI et LangGraph
+**Architecture** : ✅ un socle commun, des briques réutilisables, des chaînes qui les enchaînent (voir [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md))
+**Prochaine étape** : le dépôt privé du système qui tourne, puis un exemple exécutable avec CrewAI et LangGraph
 
 ```mermaid
 flowchart LR
     A[Conception] --> B[14 specs exécutables]
     B --> C[Architecture modulaire]
-    C --> D[Exemple CrewAI + LangGraph]
+    C --> D[Dépôt privé + exemple CrewAI et LangGraph]
 
     style A fill:#e1ffe1
     style B fill:#e1ffe1

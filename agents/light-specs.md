@@ -35,7 +35,7 @@ Prix officiels Anthropic par million de tokens (entrée / sortie), génération 
 |---|---|---|---|
 | **Opus 5.5** | `claude-opus-5-5` | 4 $ / 20 $ | Coach, CONTRARIAN, JUDGE, Dev, Insight Synthesizer |
 | **Sonnet 5.5** | `claude-sonnet-5-5` | 2 $ / 10 $ | EMBER+RAZOR, GTM, TECH-ADVISOR, PM, QA E2E |
-| **Haiku 5.5** | `claude-haiku-5-5` | 0,10 $ / 0,50 $ (requêtes jusqu'à 100k tokens) | Audit Tech (synthèse), DEPLOY, SENTINEL, Livrable |
+| **Haiku 5.5** | `claude-haiku-5-5` | 0,10 $ / 0,50 $ (requêtes jusqu'à 100k tokens) | Audit Tech (synthèse ; revue approfondie en Fable 5.2), DEPLOY, SENTINEL, Livrable |
 | **Fable 5.2** | `claude-fable-5-2` | 8 $ / 40 $ | Aucun par défaut. Trois cas validés par Vincent (24/11/2026) : escalade après 2 échecs d'Opus 5.5 sur une même tâche ; relecture de sécurité finale d'une livraison qui contient du code ; CONTRARIAN, JUDGE et Discovery Complète sur un projet client. Sinon, uniquement sur demande explicite de Vincent |
 | **Ollama local** | non applicable | Gratuit après matériel | Anonymisation et toute donnée 🟠 Sensible |
 

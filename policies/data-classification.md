@@ -1,6 +1,6 @@
 # 📊 Classification des données
 
-> **Statut** : Sprint 1 sécu — référence active.
+> **Statut** : Sprint 1 sécu : référence active.
 > **Rôle** : règle de routage des données dans le système. Détermine **où** une donnée peut transiter (API LLM externe, modèle local, jamais).
 > **Maître** : [`SECURITY.md`](../SECURITY.md)
 
@@ -31,7 +31,7 @@ flowchart LR
     style D fill:#f8d7da
 ```
 
-### 🟢 Niveau 1 — Public
+### 🟢 Niveau 1 : Public
 
 **Définition** : information déjà publique ou destinée à l'être, ne révèle rien de confidentiel sur un client, un partenaire ou moi-même.
 
@@ -46,7 +46,7 @@ flowchart LR
 
 ---
 
-### 🟡 Niveau 2 — Interne
+### 🟡 Niveau 2 : Interne
 
 **Définition** : info propre à un projet ou à mon activité, pas confidentielle au sens strict mais pas à diffuser. Aucune donnée personnelle identifiante (PII) ni secret.
 
@@ -57,19 +57,21 @@ flowchart LR
 | Choix d'architecture pour un projet donné | ✅ API Anthropic |
 | Roadmap interne, priorisation backlog | ✅ API Anthropic |
 | Code générique (sans logique métier client) | ✅ API Anthropic |
+| Code source livrable client (avec logique métier) | ✅ API Anthropic **par défaut, sauf restriction du client** (décision du 24/11/2026) |
+
+**Question au démarrage de chaque projet client (décision du 24/11/2026)** : avant tout envoi, Claude demande à Vincent si la politique du client restreint l'envoi de données chez Anthropic. Sans restriction, le code et les documents de projet passent par l'API Anthropic ; les données personnelles et sensibles restent au niveau 🟠 ci-dessous. Avec une restriction, on applique celle du client (par exemple : code en Ollama local).
 
 **Règle d'anonymisation amont** : tout nom de client, partenaire, prospect → remplacé par `CLIENT_A`, `PARTENAIRE_X`, etc. **avant** injection LLM. Mapping conservé hors-LLM, dans un fichier `.env` local jamais commité.
 
 ---
 
-### 🟠 Niveau 3 — Sensible
+### 🟠 Niveau 3 : Sensible
 
-**Définition** : données dont la fuite porterait préjudice — au client, à un utilisateur, ou à moi. Inclut le code livrable client, les contrats, les données clients réelles.
+**Définition** : données dont la fuite porterait préjudice, au client, à un utilisateur ou à moi. Inclut les données personnelles, les contrats et les données clients réelles. Le code livrable client n'en fait plus partie par défaut (niveau 🟡 sauf restriction du client, décision du 24/11/2026).
 
 | Exemples | Routage autorisé |
 |---|---|
 | Données utilisateurs réelles d'un client (même partielles) | 🟠 **Ollama local uniquement** |
-| Code source livrable client (avec logique métier identifiable) | 🟠 **Ollama local uniquement** |
 | Contrats clients, devis, NDA signés | 🟠 **Ollama local uniquement** |
 | Données financières client (CA, marges, prix négociés) | 🟠 **Ollama local uniquement** |
 | Logs applicatifs contenant des identifiants utilisateurs | 🟠 **Ollama local uniquement** |
@@ -77,22 +79,22 @@ flowchart LR
 
 **Conséquence pratique** :
 - Pas d'API Anthropic. Le moteur LLM est **Ollama local** sur Mac Mini M2 (Llama 3 ou Mistral).
-- Le Mac Mini M2 fait office de "zone sensible" — pas connecté à des services externes pendant le traitement.
+- Le Mac Mini M2 fait office de "zone sensible" : pas connecté à des services externes pendant le traitement.
 - Le Canvas YAML d'un projet niveau Sensible n'est **pas synchronisé sur GitHub public**. Il reste en local ou dans un dépôt privé chiffré.
 
 ---
 
-### 🔴 Niveau 4 — Critique
+### 🔴 Niveau 4 : Critique
 
 **Définition** : tout secret, toute PII brute, toute donnée dont la fuite est juridiquement ou financièrement catastrophique. **Aucun LLM ne doit jamais les voir.**
 
 | Exemples | Routage autorisé |
 |---|---|
-| Clés API (Anthropic, OpenAI, MCP, providers) | ❌ Jamais en LLM — Keychain macOS / `.env` chiffré |
-| Mots de passe, tokens d'authentification | ❌ Jamais en LLM — gestionnaire dédié |
-| PII brutes (NIR, RIB, n° carte, passeport) | ❌ Jamais en LLM — stockage chiffré, accès humain |
-| Données de santé, données pénales | ❌ Jamais en LLM — RGPD strict, sortie du système |
-| Secrets industriels clients explicitement marqués | ❌ Jamais en LLM — sortie du système |
+| Clés API (Anthropic, OpenAI, MCP, providers) | ❌ Jamais en LLM : Keychain macOS / `.env` chiffré |
+| Mots de passe, tokens d'authentification | ❌ Jamais en LLM : gestionnaire dédié |
+| PII brutes (NIR, RIB, n° carte, passeport) | ❌ Jamais en LLM : stockage chiffré, accès humain |
+| Données de santé, données pénales | ❌ Jamais en LLM : RGPD strict, sortie du système |
+| Secrets industriels clients explicitement marqués | ❌ Jamais en LLM : sortie du système |
 
 **Conséquence pratique** :
 - Ces données ne doivent **jamais transiter** par un agent, même local.
@@ -115,13 +117,13 @@ flowchart LR
 ## 🪪 Qui classe une donnée ? Quand ? Comment ?
 
 ### Quand
-**Au moment où la donnée entre dans le système** — c'est-à-dire :
+**Au moment où la donnée entre dans le système** : c'est-à-dire :
 - À l'ingestion du brief initial par moi
 - À la première écriture dans le Canvas YAML
 - À la connexion d'une nouvelle source (MCP, API, fichier)
 
 ### Qui
-**Moi en premier lieu** — pour chaque projet, je détermine le **niveau plafond** du projet (le maximum atteignable). Ce niveau est inscrit dans le Canvas :
+**Moi en premier lieu** : pour chaque projet, je détermine le **niveau plafond** du projet (le maximum atteignable). Ce niveau est inscrit dans le Canvas :
 
 ```yaml
 meta:
@@ -153,7 +155,7 @@ flowchart TD
 
 ---
 
-## 🧹 Anonymisation amont — quand et comment
+## 🧹 Anonymisation amont : quand et comment
 
 Obligatoire pour tout traitement Niveau Interne via API Anthropic. Recommandé même en local.
 
@@ -171,8 +173,8 @@ Obligatoire pour tout traitement Niveau Interne via API Anthropic. Recommandé m
 | Données financières précises | "CA 2024 : 2,3 M€" | "CA : ordre de grandeur 2-3M€" |
 
 ### Outils
-- **Premier niveau** : regex (emails, téléphones, RIB) — déterministe, fiable
-- **Deuxième niveau** : `presidio` (Microsoft, open source) — détection NER avancée des entités
+- **Premier niveau** : regex (emails, téléphones, RIB) : déterministe, fiable
+- **Deuxième niveau** : `presidio` (Microsoft, open source) : détection NER avancée des entités
 - **Troisième niveau** : LLM local via Ollama (Mac Mini M2) sur le brief pour repérer ce qui aurait échappé
 
 > ⚠️ **Toute la chaîne d'anonymisation est locale.** Aucun modèle Claude (Haiku, Sonnet, Opus, Fable) n'est accessible en local : ce sont des modèles API. Les utiliser à cette étape enverrait les données brutes chez Anthropic, ce qui annulerait l'anonymisation.
@@ -187,16 +189,18 @@ Chaque agent doit déclarer son **niveau de classification max accepté** dans s
 
 | Agent | Niveau max accepté | Raison |
 |---|---|---|
-| EMBER+RAZOR | 🟡 Interne | Recherche web — API Anthropic OK avec anonymisation |
+| EMBER+RAZOR | 🟡 Interne | Recherche web : API Anthropic OK avec anonymisation |
 | CONTRARIAN | 🟡 Interne | Analyse uniquement le brief anonymisé |
 | JUDGE | 🟡 Interne | Verdict sur données déjà anonymisées |
 | Agent GTM | 🟡 Interne | Idem |
 | Agent PM | 🟡 Interne | Spécifications sur brief anonymisé |
-| Agent Dev | 🟠 Sensible | Produit du code livrable client → Ollama local obligatoire |
-| Agent Audit Tech | 🟠 Sensible | Lit le code livrable → CLI local sans LLM (Bandit, etc.) |
+| Agent Dev | 🟠 Sensible | Code client via l'API Anthropic par défaut (sauf restriction du client) ; projet 🟠 Sensible : Ollama local obligatoire |
+| Agent Audit Tech | 🟠 Sensible | Couche 1 : outils CLI locaux, le LLM de synthèse (Haiku 5.5) ne reçoit que les résultats, jamais le code. Couche 2 : revue approfondie en Fable 5.2, qui lit le code (sauf restriction du client, jamais sur un projet 🟠 Sensible) |
 | Agent QA E2E | 🟠 Sensible | Tests sur livrable client réel → environnement isolé |
 | Insight Synthesizer | 🟠 Sensible | Croise feedback réel avec données utilisateurs client |
 | Agent Livrable | 🟡 Interne | Génère docs clients depuis Canvas anonymisé, puis désanonymisation locale |
+| Agent DEPLOY | 🟡 Interne pour le LLM | Le LLM ne reçoit que des statuts, des chiffres et l'adresse publique, jamais de code ni de secret ; projet 🟠 : notification par gabarit sans modèle |
+| SENTINEL | 🟡 Interne pour le LLM | Le LLM ne reçoit que des agrégats et des chiffres, jamais de log brut ; les logs (PII possible) restent dans les collecteurs |
 
 > ⚠️ **Conséquence forte** : tout projet client de niveau Sensible **nécessite Ollama local fonctionnel**. C'est un blocage potentiel si Ollama tombe en panne. À ce moment-là, le pipeline s'arrête et m'attend.
 
@@ -205,6 +209,6 @@ Chaque agent doit déclarer son **niveau de classification max accepté** dans s
 ## 📝 Décisions ouvertes
 
 - [ ] Faut-il chiffrer le `.anonymization-map.json` au repos (au-delà de l'exclure de Git) ?
-- [ ] Quel choix précis Llama 3 vs Mistral pour Ollama local — à benchmarker sur le contexte FR
+- [ ] Quel choix précis Llama 3 vs Mistral pour Ollama local : à benchmarker sur le contexte FR
 - [ ] Politique de rétention : combien de temps on garde les Canvas YAML de projets clôturés (Sensible → suppression à J+90 ? J+365 ?)
 - [ ] Faut-il un coffre type Vault pour les briefs clients en attente de traitement ?

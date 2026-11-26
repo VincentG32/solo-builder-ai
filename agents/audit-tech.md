@@ -1,10 +1,10 @@
 # Agent : Audit Tech
 
-> **Rôle en une ligne** : Auditer automatiquement le code livré par Dev (sécurité, qualité, accessibilité, scalabilité, performance, privacy) avec des outils en ligne de commande, calculer six feux R/O/V de façon déterministe, puis faire traduire les résultats en langage métier par un petit modèle qui ne peut changer aucun feu.
+> **Rôle en une ligne** : Auditer automatiquement le code livré par Dev (sécurité, qualité, accessibilité, scalabilité, performance, privacy) avec des outils en ligne de commande, calculer six feux R/O/V de façon déterministe, puis faire traduire les résultats en langage métier par un petit modèle qui ne peut changer aucun feu. Une seconde couche, la revue approfondie en Fable 5.2, lit le code et creuse ce que les outils ne voient pas ; elle peut seulement ajouter des alertes ou durcir un feu.
 > **Phase** : Delivery (troisième agent de chaque sprint, après Dev, avant QA E2E ou DEPLOY)
 > **Statut spec** : 🟢 Spec exécutable
 > **Owner** : Vincent · **Dernière MAJ** : 2026-11-24
-> **Modèle LLM par défaut** : Claude Haiku 5.5 (`claude-haiku-5-5`), uniquement pour la synthèse en langage métier (les outils ne consomment aucun token, et le LLM ne décide d'aucun feu). Sur un projet 🟠 Sensible, aucun LLM n'est appelé : la synthèse est un gabarit déterministe (section 6)
+> **Modèle LLM par défaut** : couche 2 (revue approfondie) en Claude Fable 5.2 (`claude-fable-5-2`), décision du 24/11/2026 ; couche 1 : Claude Haiku 5.5 (`claude-haiku-5-5`), uniquement pour la synthèse en langage métier (les outils ne consomment aucun token, et le LLM ne décide d'aucun feu). Sur un projet 🟠 Sensible, aucun LLM n'est appelé : la synthèse est un gabarit déterministe (section 6)
 > **Niveau de classification max accepté** : 🟠 Sensible (cf [`policies/data-classification.md`](../policies/data-classification.md), tableau « Conséquences sur le pipeline » : lit le code livrable, CLI local sans LLM). 🔴 Critique refusé
 > **Activable en mode** : perso ✅ · client ✅ (jamais skippable)
 > **Prompt version active** : v1.0
@@ -16,6 +16,15 @@
 Vincent ne lit pas de code et Dev peut produire un code qui compile, passe ses propres tests et reste dangereux ou fragile (secret en clair, dépendance vulnérable, test bidon, route cachée). C'est la couche 6 de [`SECURITY.md`](../SECURITY.md) : on s'appuie sur des outils éprouvés, pas sur le jugement d'un modèle. Audit Tech exécute ces outils et rend un verdict en six feux, en langage métier (principe 2), bloquant sur le doute (principe 3).
 
 L'agent est une **cible critique** : un code livré peut contenir `# IGNORE THIS FILE FROM AUDIT` ou une consigne cachée visant le modèle de synthèse. La conception répond par construction : les feux sont calculés par du code à partir des sorties des outils (le LLM ne peut pas transformer un rouge en vert), les outils tournent avec une configuration imposée qui ignore les directives d'exclusion du dépôt, et le LLM ne voit jamais de code.
+
+### Couche 2 : revue approfondie (décision de Vincent du 24/11/2026)
+
+Les outils de la couche 1 trouvent les problèmes connus (faille répertoriée, secret, dépendance vulnérable) mais ne creusent pas. La couche 2 confie le code du commit audité à un modèle qui le lit et cherche ce que les outils ne voient pas : contrôle d'accès oublié, faille de logique métier, données d'un utilisateur visibles par un autre, validation d'entrée absente.
+
+- **Modèle** : Claude Fable 5.2, cas « relecture de sécurité finale d'une livraison qui contient du code » de [`light-specs.md`](light-specs.md#-répartition-des-modèles).
+- **Garde-fou** : elle peut seulement **ajouter** des constats ou **durcir** un feu, jamais en baisser un ni lever un blocage de la couche 1 ; l'Orchestrateur applique la règle « le plus sévère l'emporte ». Une consigne glissée dans le code (« ignore ce fichier ») est signalée en `security_flags`, jamais suivie.
+- **Données** : le code part chez Anthropic, sauf restriction du client ([`policies/data-classification.md`](../policies/data-classification.md)) ; sur un projet 🟠 Sensible, la couche 2 n'est pas lancée et le checkpoint le signale.
+- **Sortie** : constats en langage métier, chacun avec sa localisation et une gravité, ajoutés aux `blocking_issues` ou aux `points_a_decider`.
 
 **Test du retrait** : sans cet agent, la seule vérification du code est celle de Dev sur lui-même : « 87 % de couverture » ne dit pas si les tests vérifient quoi que ce soit.
 

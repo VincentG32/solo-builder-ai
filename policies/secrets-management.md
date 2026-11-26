@@ -1,6 +1,6 @@
 # 🔑 Gestion des secrets
 
-> **Statut** : Sprint 2 sécu — référence active.
+> **Statut** : Sprint 2 sécu : référence active.
 > **Couvre** : tout secret (clé API, token, mot de passe, donnée brute classifiée 🔴 Critique, mapping anonymisation).
 > **S'applique à** : mode `client` et mode `perso`. **Non négociable même en perso.**
 
@@ -8,7 +8,7 @@
 
 ## 🎯 Pourquoi ce doc
 
-Un secret en clair dans un commit Git, un log, un prompt LLM ou une config publiée est **irrécupérable** — il faut tout révoquer et rotation. Les conséquences vont de la facture inattendue (clé API exposée) à la fuite de données client (RGPD, contentieux).
+Un secret en clair dans un commit Git, un log, un prompt LLM ou une config publiée est **irrécupérable** : il faut tout révoquer et rotation. Les conséquences vont de la facture inattendue (clé API exposée) à la fuite de données client (RGPD, contentieux).
 
 **Hypothèse de travail** : **un secret est compromis dès qu'il sort de l'endroit où il devrait être**. La défense est préventive (jamais en clair) plus que curative.
 
@@ -47,7 +47,7 @@ flowchart TD
 
 ---
 
-## 🏠 Stockage — où vivent les secrets
+## 🏠 Stockage : où vivent les secrets
 
 ### Règle absolue
 > **Aucun secret ne vit dans un fichier qui peut potentiellement aller sur Git.**
@@ -93,7 +93,7 @@ api_key = os.environ["ANTHROPIC_API_KEY"]  # ← jamais hardcodé
 
 ---
 
-## 🚂 Transit — comment les secrets circulent
+## 🚂 Transit : comment les secrets circulent
 
 ### Règles
 
@@ -135,9 +135,9 @@ C'est la règle la plus importante. Aucun prompt envoyé à Anthropic/OpenAI/Oll
 
 ---
 
-## 🛡️ Détection — repérer les fuites avant qu'elles ne sortent
+## 🛡️ Détection : repérer les fuites avant qu'elles ne sortent
 
-### Couche 1 — Pre-commit hook
+### Couche 1 : Pre-commit hook
 
 Avant tout commit Git :
 
@@ -152,11 +152,11 @@ fi
 
 → Aucun secret ne passe le commit local, même par accident.
 
-### Couche 2 — Sanitisation des outputs d'agents
+### Couche 2 : Sanitisation des outputs d'agents
 
 Cf [`prompt-injection-defense.md`](prompt-injection-defense.md#filtre-2--scan-secrets). Tout output d'agent qui matche un pattern de secret est rejeté avant écriture Canvas.
 
-### Couche 3 — Scan régulier de l'historique Git
+### Couche 3 : Scan régulier de l'historique Git
 
 Une fois par semaine (cron ou manuel) :
 
@@ -166,7 +166,7 @@ gitleaks detect --no-banner --log-opts="--all"
 
 → Détecte les secrets éventuellement remontés via merge ou cherry-pick.
 
-### Couche 4 — Alertes GitHub natives
+### Couche 4 : Alertes GitHub natives
 
 GitHub scanne automatiquement les pushs pour les patterns de secrets connus (Anthropic, OpenAI, AWS, Stripe, etc.) et envoie une alerte si détection. À activer dans les paramètres du repo.
 
@@ -182,7 +182,7 @@ GitHub scanne automatiquement les pushs pour les patterns de secrets connus (Ant
 
 ---
 
-## ♻️ Rotation — quand on change les secrets
+## ♻️ Rotation : quand on change les secrets
 
 ### Périodicité
 
@@ -209,26 +209,26 @@ flowchart LR
 
 ### En cas de fuite avérée
 
-**Procédure d'urgence** — délai cible : **< 1h** pour révoquer, **< 24h** pour audit complet.
+**Procédure d'urgence** : délai cible : **< 1h** pour révoquer, **< 24h** pour audit complet.
 
 1. **Révoquer immédiatement** le secret côté provider (interface web)
 2. **Générer un nouveau secret** et mettre à jour Keychain + CI
-3. **Auditer l'historique d'utilisation** du secret compromis (logs provider) — qu'a-t-il fait ? Y a-t-il eu usage anormal ?
-4. **Identifier le point de fuite** — où le secret a-t-il fuité ?
+3. **Auditer l'historique d'utilisation** du secret compromis (logs provider) : qu'a-t-il fait ? Y a-t-il eu usage anormal ?
+4. **Identifier le point de fuite** : où le secret a-t-il fuité ?
 5. **Patcher le point de fuite** (config, code, process)
-6. **Communiquer si nécessaire** — client / partenaire / autorités (RGPD si données personnelles concernées)
-7. **Post-mortem écrit** — ce qui a fuité, comment, ce qui a changé pour éviter récidive
+6. **Communiquer si nécessaire** : client / partenaire / autorités (RGPD si données personnelles concernées)
+7. **Post-mortem écrit** : ce qui a fuité, comment, ce qui a changé pour éviter récidive
 
 ---
 
 ## 🧰 Cas particuliers du système Solo Builder
 
-### Cas 1 — Le mapping d'anonymisation
+### Cas 1 : Le mapping d'anonymisation
 
 `.anonymization-map.json` par projet contient le mapping `CLIENT_A → Société Réelle SARL` etc. Il permet de désanonymiser les livrables finaux.
 
 **Stockage** :
-- Local au repo du projet (jamais commité — `.gitignore` protège)
+- Local au repo du projet (jamais commité : `.gitignore` protège)
 - Chiffré avec `sops` + `age` pour une protection au repos
 - Clé `age` stockée dans Keychain
 
@@ -237,18 +237,18 @@ flowchart LR
 - Mis à jour à chaque nouvelle entité anonymisée
 - **Supprimé** 90 jours après la livraison finale du projet (sauf demande client explicite documentée)
 
-### Cas 2 — Les MCP
+### Cas 2 : Les MCP
 
 Chaque MCP installé a des permissions et un token. Règles :
 
 | Règle | Concrètement |
 |---|---|
 | **Allowlist stricte** | Seuls les MCP de cette liste sont autorisés : Notion, Airtable, Granola, Cal.com, Drive, Gmail, Webflow, Bubble, Figma, Webflow, Datagouv, MCP-Registry. Pas d'autres sans audit. |
-| **Permissions minimum** | Chaque MCP demande des scopes — on n'autorise que ce qui est strictement nécessaire à son usage |
+| **Permissions minimum** | Chaque MCP demande des scopes : on n'autorise que ce qui est strictement nécessaire à son usage |
 | **Audit trimestriel** | Revue de la liste des MCP installés + scopes. Désinstaller les non-utilisés. |
-| **Rotation tokens** | Idem API keys — 90 jours |
+| **Rotation tokens** | Idem API keys : 90 jours |
 
-### Cas 3 — Le Canvas YAML lui-même
+### Cas 3 : Le Canvas YAML lui-même
 
 Le Canvas n'est PAS un secret en soi (c'est juste de la donnée structurée). Mais selon la classification du projet :
 
@@ -278,9 +278,9 @@ Le Canvas n'est PAS un secret en soi (c'est juste de la donnée structurée). Ma
 ## 📚 Références externes
 
 - [OWASP Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
-- [12-Factor App — III. Config](https://12factor.net/config) — secrets en env vars
-- [gitleaks](https://github.com/gitleaks/gitleaks) — scan secrets
-- [sops](https://github.com/getsops/sops) + [age](https://github.com/FiloSottile/age) — chiffrement fichiers
+- [12-Factor App : III. Config](https://12factor.net/config) : secrets en env vars
+- [gitleaks](https://github.com/gitleaks/gitleaks) : scan secrets
+- [sops](https://github.com/getsops/sops) + [age](https://github.com/FiloSottile/age) : chiffrement fichiers
 - [GitHub Secret scanning](https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning)
 
 ---
